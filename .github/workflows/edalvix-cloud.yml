@@ -1,0 +1,65 @@
+# SPDX-FileCopyrightText: 2026 EDALVIX
+# SPDX-License-Identifier: MIT
+
+name: Edalvix Cloud server package
+run-name: "${{ inputs.version && format('Edalvix Cloud {0}', inputs.version) || 'Edalvix branding tests' }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Nextcloud server version to brand (e.g. 32.0.1)'
+        required: true
+  push:
+    branches:
+      - main
+    paths:
+      - 'branding/edalvix/**'
+      - 'tests/edalvix/**'
+      - '.github/workflows/edalvix-cloud.yml'
+  pull_request:
+    paths:
+      - 'branding/edalvix/**'
+      - 'tests/edalvix/**'
+      - '.github/workflows/edalvix-cloud.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Shellcheck
+        run: shellcheck branding/edalvix/scripts/*.sh tests/edalvix/*.sh
+
+      - name: Run tests
+        run: bash tests/edalvix/test.sh
+
+  package:
+    if: github.event_name == 'workflow_dispatch'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Validate version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(rc[0-9]+|beta[0-9]+)?$ ]] || { echo "Invalid version: $VERSION"; exit 1; }
+
+      - name: Build Edalvix Cloud package
+        env:
+          VERSION: ${{ inputs.version }}
+        run: bash branding/edalvix/scripts/build-release.sh "$VERSION" dist
+
+      - name: Upload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: edalvix-cloud-${{ inputs.version }}
+          path: dist/
