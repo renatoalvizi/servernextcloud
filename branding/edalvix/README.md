@@ -15,7 +15,9 @@ Cada cliente fica em `https://<empresa>.edalvix.cloud`.
 | Cor primária | `#0068ce` (azul Cloud do site) |
 | Fundo | `#071d33` (navy EDALVIX) |
 | Slogan | Seus arquivos sempre com você |
-| Logos | `assets/logo.svg` (claro, para fundo navy), `assets/logo-dark.svg`, `assets/logoheader.svg`, `assets/favicon.svg` |
+| Ícone principal | cilindro azul do Edalvix Cloud (o mesmo do site) |
+| Logos | `assets/logo.svg` (claro, para fundo navy), `assets/logo-dark.svg`, `assets/logoheader.svg` (ícone branco para o cabeçalho), `assets/favicon.svg` |
+| Marca EDALVIX | secundária: assinatura "por EDALVIX" no logo e "um produto EDALVIX" no rodapé |
 
 ## Estrutura
 

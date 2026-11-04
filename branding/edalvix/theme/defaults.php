@@ -51,8 +51,10 @@ class OC_Theme {
 	}
 
 	public function getShortFooter(): string {
-		return '<a href="' . self::BASE_URL . '" target="_blank" rel="noreferrer noopener">'
-			. self::ENTITY . '</a> – ' . self::SLOGAN;
+		// Product first; the EDALVIX company brand is a secondary signature.
+		return self::NAME . ' – ' . self::SLOGAN
+			. ' · um produto <a href="' . self::BASE_URL . '" target="_blank" rel="noreferrer noopener">'
+			. self::ENTITY . '</a>';
 	}
 
 	public function getLongFooter(): string {
