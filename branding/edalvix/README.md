@@ -86,3 +86,13 @@ bash tests/edalvix/test.sh
   apps e documentação); o tema cobre a interface principal, e-mails e login.
 - A integração com a versão upstream continua igual: o pipeline oficial
   (`release-*.yml`) não foi modificado.
+
+## Workflows herdados do Nextcloud (removidos)
+
+Este fork não usa a automação de releases do Nextcloud. Por isso foram
+removidos `sync-branches.yml` (que enviava branches para
+`nextcloud-releases/server`) e `release.yml`/`release-*.yml` (tag, changelog,
+build, updater, milestones e calendário oficiais). Todos dependiam de
+credenciais do Nextcloud e, num fork, só gerariam execuções com falha. Eles
+continuam no histórico do git. Os scripts de build em `.github/scripts/` e
+`tools/release/` foram mantidos, assim como os testes.
