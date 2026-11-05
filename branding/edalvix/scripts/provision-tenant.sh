@@ -55,6 +55,24 @@ fi
 
 occ() { "${OCC_CMD[@]}" "$@"; }
 
+# The theme (and the logos used below) must be inside the instance before any
+# setting changes, so a missing theme cannot leave the instance half-configured.
+if [ -z "${OCC:-}" ]; then
+  if [ ! -f "$NC_DIR/version.php" ]; then
+    echo "error: '$NC_DIR' is not a Nextcloud directory (use -d)" >&2
+    exit 1
+  fi
+  if [ ! -f "$ASSETS/logo.svg" ]; then
+    echo "==> Edalvix theme not installed yet, installing it"
+    bash "$(dirname "${BASH_SOURCE[0]}")/apply-theme.sh" "$NC_DIR"
+  fi
+  if [ "$(id -un)" != "$RUN_AS" ]; then
+    chown -R "$RUN_AS": "$NC_DIR/themes/edalvix" 2>/dev/null || true
+  fi
+else
+  echo "note: with OCC set, run apply-theme.sh on the Nextcloud files first (theme expected at $ASSETS)"
+fi
+
 echo "==> Provisioning Edalvix Cloud for $URL"
 
 # Address

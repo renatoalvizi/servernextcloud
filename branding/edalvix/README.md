@@ -65,6 +65,11 @@ Em Docker:
 OCC="docker exec -u www-data nextcloud php occ" bash branding/edalvix/scripts/provision-tenant.sh -d /var/www/html algumaempresa
 ```
 
+Se o tema ainda não estiver em `themes/edalvix`, o script roda o
+`apply-theme.sh` sozinho **antes** de alterar qualquer configuração. Os logos
+são lidos de lá, então a pasta `branding/edalvix/` precisa estar no servidor.
+Com `OCC=...` (Docker), rode o `apply-theme.sh` nos arquivos do Nextcloud antes.
+
 O script configura `trusted_domains`, `overwrite.cli.url`, HTTPS, ativa o tema,
 aplica nome/cores/logos via `occ theming:config`, aponta os links de download
 para os clientes Edalvix e desativa os apps de anúncios e telemetria do Nextcloud

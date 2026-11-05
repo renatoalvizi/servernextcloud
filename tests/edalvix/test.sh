@@ -38,6 +38,25 @@ done
 tar -tjf "$WORK/dist/edalvix-cloud-32.0.1.tar.bz2" | grep -q '^nextcloud/themes/edalvix/defaults.php$' || fail "theme not packaged"
 (cd "$WORK/dist" && sha256sum -c --quiet edalvix-cloud-32.0.1.tar.bz2.sha256) || fail "bad checksum"
 
+# provision-tenant.sh installs the theme itself when missing, before changing anything
+mkdir -p "$WORK/fresh/nextcloud"
+echo '<?php' > "$WORK/fresh/nextcloud/version.php"
+cat > "$WORK/fakephp" <<'MOCK'
+#!/bin/bash
+shift  # drop the occ path
+echo "$*" >> "$OCC_LOG"
+MOCK
+chmod +x "$WORK/fakephp"
+mkdir -p "$WORK/bin" && ln -sf "$WORK/fakephp" "$WORK/bin/php"
+export OCC_LOG="$WORK/occ.log"
+: > "$OCC_LOG"
+PATH="$WORK/bin:$PATH" bash "$SCRIPTS/provision-tenant.sh" -u "$(id -un)" -d "$WORK/fresh/nextcloud" empresa3 > /dev/null
+[ -f "$WORK/fresh/nextcloud/themes/edalvix/assets/logo.svg" ] || fail "provision did not install the missing theme"
+grep -qx "theming:config logo $WORK/fresh/nextcloud/themes/edalvix/assets/logo.svg" "$OCC_LOG" || fail "provision did not use the installed logo"
+if PATH="$WORK/bin:$PATH" bash "$SCRIPTS/provision-tenant.sh" -u "$(id -un)" -d "$WORK/nope" empresa3 2> /dev/null; then
+  fail "provision accepted a non-Nextcloud dir"
+fi
+
 # provision-tenant.sh (occ mocked: records every call)
 cat > "$WORK/occ" <<'MOCK'
 #!/bin/bash
