@@ -108,4 +108,14 @@ if grep -q 'appstoreenabled' "$OCC_LOG"; then fail "-k still locked the instance
 
 if OCC="$WORK/occ" bash "$SCRIPTS/provision-tenant.sh" 'bad_name' 2> /dev/null; then fail "invalid tenant accepted"; fi
 
+# -t: look only, no domain, settings or lockdown, no tenant needed
+: > "$OCC_LOG"
+OCC="$WORK/occ" bash "$SCRIPTS/provision-tenant.sh" -t -d /var/www/html > /dev/null
+grep -qx 'config:system:set theme --value=edalvix' "$OCC_LOG" || fail "-t did not enable the theme"
+grep -qx 'theming:config name Edalvix Cloud' "$OCC_LOG" || fail "-t did not set the name"
+grep -qx 'theming:config logo /var/www/html/themes/edalvix/assets/logo.svg' "$OCC_LOG" || fail "-t did not set the logo"
+for unwanted in trusted_domains overwrite.cli.url overwriteprotocol default_language skeletondirectory appstoreenabled 'app:disable' 'config:import'; do
+  if grep -q -- "$unwanted" "$OCC_LOG"; then fail "-t changed $unwanted"; fi
+done
+
 echo "All Edalvix branding tests passed"

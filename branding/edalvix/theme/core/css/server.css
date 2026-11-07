@@ -19,6 +19,7 @@
  * =================================================================== */
 body[data-theme-light],
 body[data-theme-default],
+#body-public,
 body[data-theme-light-highcontrast] {
 	/* Site palette */
 	--ex-navy: #061430;
@@ -115,7 +116,7 @@ body[data-theme-dark-highcontrast] {
 
 /* Theme "default" follows the system, like the site's dark.css */
 @media (prefers-color-scheme: dark) {
-	body[data-theme-default] {
+	body[data-theme-default], #body-public {
 		--ex-navy: #071426;
 		--ex-blue: #6bb4ff;
 		--ex-cyan: #6ccfff;
@@ -258,7 +259,8 @@ input[type="button"].primary:active:not(:disabled),
 }
 
 #body-user #header,
-#body-settings #header {
+#body-settings #header,
+#body-public #header {
 	background: var(--ex-header-bg) !important;
 	border-bottom: 1px solid var(--ex-line);
 	-webkit-backdrop-filter: blur(18px);
@@ -267,7 +269,8 @@ input[type="button"].primary:active:not(:disabled),
 
 /* Brand: the colour lockup instead of the single white icon */
 #body-user #nextcloud,
-#body-settings #nextcloud {
+#body-settings #nextcloud,
+#body-public #nextcloud {
 	width: auto !important;
 	min-width: 240px;
 	padding-inline: 14px 8px !important;
@@ -276,7 +279,9 @@ input[type="button"].primary:active:not(:disabled),
 #body-user #header .logo,
 #body-user #header .logo-icon,
 #body-settings #header .logo,
-#body-settings #header .logo-icon {
+#body-settings #header .logo-icon,
+#body-public #header .logo,
+#body-public #header .logo-icon {
 	background-image: var(--ex-header-logo) !important;
 	background-size: contain !important;
 	background-position: left center !important;
@@ -364,7 +369,7 @@ body[data-theme-dark-highcontrast] {
 }
 
 @media (prefers-color-scheme: dark) {
-	body[data-theme-default] {
+	body[data-theme-default], #body-public {
 		--ex-nav-bg: #0c1d36;
 		--ex-nav-icon: #b9cde4;
 		--ex-quota-bg: linear-gradient(150deg, #132e4c, #10243f);
@@ -628,7 +633,7 @@ body[data-theme-dark-highcontrast] {
 }
 
 @media (prefers-color-scheme: dark) {
-	body[data-theme-default] {
+	body[data-theme-default], #body-public {
 		--ex-orb-bg: linear-gradient(140deg, #193c63, #102846);
 		--ex-orb-border: #5384b0;
 		--ex-orb-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 0 14px rgba(44, 140, 219, .3), 0 8px 18px rgba(1, 10, 28, .6);
@@ -717,7 +722,7 @@ body[data-theme-dark-highcontrast] {
 }
 
 @media (prefers-color-scheme: dark) {
-	body[data-theme-default] {
+	body[data-theme-default], #body-public {
 		--ex-title: #f1f7ff;
 	}
 }
@@ -912,4 +917,101 @@ label:not(.input-field__label):not(.checkbox-radio-switch__label) {
 	font-weight: 600;
 	color: var(--ex-muted);
 	white-space: nowrap;
+}
+
+/* ===================================================================
+ * 9. Public share pages (visitors): same header as inside, no footer.
+ *    They carry no theme attribute, so they follow the system, like the site.
+ * =================================================================== */
+#body-public {
+	--footer-height: 0px !important;
+}
+
+#body-public footer {
+	display: none !important;
+}
+
+#body-public #header .header-title,
+#body-public #header .header-info {
+	color: var(--ex-ink) !important;
+	font-weight: 750;
+	letter-spacing: -0.02em;
+}
+
+/* A thin divider between the brand and the share name */
+#body-public #header .header-info {
+	padding-left: 14px;
+	border-left: 1px solid var(--ex-line);
+}
+
+/* Public header: the logo is absolutely positioned by Nextcloud; put the
+ * share name after it instead of under it */
+#body-public #header .header-appname {
+	min-width: 0 !important;
+	width: auto !important;
+	align-items: center;
+}
+
+#body-public #header .header-appname .logo {
+	position: static !important;
+	flex: none;
+	height: 36px !important;
+}
+
+#body-public #header .header-info {
+	margin-left: 14px !important;
+	min-width: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+/* Phones: icon only, the share name needs the room */
+@media (max-width: 600px) {
+	#body-public #header .header-appname .logo {
+		width: 36px !important;
+		background-image: url('../img/favicon.svg') !important;
+	}
+}
+
+/* Public header "Baixar": compact, like the site's "Área do cliente" */
+#body-public #header .header-end .button-vue--vue-primary,
+#body-public #header .header-end .button-vue--primary {
+	min-height: 32px !important;
+	height: 32px !important;
+	padding: 0 12px !important;
+	border-radius: 8px !important;
+}
+
+#body-public #header .header-end .button-vue--vue-primary .button-vue__text,
+#body-public #header .header-end .button-vue--primary .button-vue__text {
+	font-size: 12px !important;
+}
+
+#body-public #header .header-end .button-vue--vue-primary .button-vue__icon,
+#body-public #header .header-end .button-vue--primary .button-vue__icon {
+	min-width: 18px !important;
+	width: 18px !important;
+	height: 18px !important;
+}
+
+#body-public #header .header-end .button-vue--vue-primary .button-vue__wrapper,
+#body-public #header .header-end .button-vue--primary .button-vue__wrapper {
+	gap: 6px;
+}
+
+/* Icons on primary (gradient) buttons are always white, also on dark themes
+ * (where Nextcloud's primary text colour is dark) */
+.button-vue--vue-primary .button-vue__icon,
+.button-vue--primary .button-vue__icon,
+.button-vue--vue-primary .material-design-icon,
+.button-vue--primary .material-design-icon {
+	color: #fff !important;
+}
+
+/* Legacy CSS icons (e.g. .icon-download) on primary buttons: Nextcloud
+ * inverts them, which turns the dark-mode white drawing black. Always white. */
+.button-vue--vue-primary .button-vue__icon .icon,
+.button-vue--primary .button-vue__icon .icon {
+	filter: brightness(0) invert(1) !important;
 }

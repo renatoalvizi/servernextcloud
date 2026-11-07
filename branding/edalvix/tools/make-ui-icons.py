@@ -162,7 +162,7 @@ def build_vue(data) -> int:
         "/* Light icons need a little more light on dark themes */",
         "body { --ex-icon-filter: none; }",
         "body[data-theme-dark], body[data-theme-dark-highcontrast] { --ex-icon-filter: brightness(1.55) saturate(1.1); --background-invert-if-dark: no !important; }",
-        "@media (prefers-color-scheme: dark) { body[data-theme-default] { --ex-icon-filter: brightness(1.55) saturate(1.1); --background-invert-if-dark: no !important; } }",
+        "@media (prefers-color-scheme: dark) { body[data-theme-default], #body-public { --ex-icon-filter: brightness(1.55) saturate(1.1); --background-invert-if-dark: no !important; } }",
         "",
         "/* Restyled icon files (theme overrides) */",
         'img[src*="/themes/edalvix/core/img/actions/"], img[src*="/themes/edalvix/core/img/places/"], img[src*="/themes/edalvix/apps/"] { filter: var(--ex-icon-filter) !important; }',

@@ -22,10 +22,19 @@ BRAND = HERE.parent
 WORDMARK = '''<path d="M14 0 H107 V19 H26 Q22 19 22 23 V35 H96 V53 H22 V66 Q22 71 27 71 H107 V90 H14 Q0 90 0 76 V14 Q0 0 14 0 Z" fill-rule="evenodd" transform="translate(0,0)" /><path d="M0 0 H63 C100 0 123 18 123 45 C123 73 101 90 63 90 H0 Z M24 20 V70 H62 C85 70 98 62 98 45 C98 28 85 20 62 20 Z" fill-rule="evenodd" transform="translate(129,0)" /><path d="M0 90 54 9 Q60 0 66 0 H72 Q79 0 84 9 L138 90 H110 L69 27 L28 90 Z" fill-rule="evenodd" transform="translate(273,0)" /><path d="M0 0 H24 V64 Q24 71 32 71 H109 V90 H19 Q0 90 0 73 Z" fill-rule="evenodd" transform="translate(432,0)" /><path d="M0 0 H29 L67 63 L105 0 H134 L83 82 Q78 90 71 90 H63 Q57 90 51 82 Z" fill-rule="evenodd" transform="translate(561,0)" /><path d="M0 0 H24 V90 H0 Z" fill-rule="evenodd" transform="translate(716,0)" /><path d="M0 0 H31 L66 33 L102 0 H134 L83 45 L134 90 H102 L66 57 L30 90 H0 L49 45 Z" fill-rule="evenodd" transform="translate(763,0)" />'''
 WM_W, WM_H = 897.0, 90.0
 
-CYL_DEFS = '<linearGradient id="ecb" x2=".8" y2="1"><stop stop-color="#0086fa"/><stop offset="1" stop-color="#0051b9"/></linearGradient>'
-CYL = ('<path fill="url(#ecb)" d="M9 19h62v42c0 9-14 16-31 16S9 70 9 61Z"/>'
-       '<ellipse cx="40" cy="19" rx="31" ry="15" fill="#087df1"/>'
-       '<path d="M9 20c0 9 14 16 31 16s31-7 31-16M9 40c0 9 14 16 31 16s31-7 31-16" fill="none" stroke="#fff" stroke-width="4"/>')
+# Cloud icon: a regular cylinder made of three solid pieces (top face and two
+# segments) separated by gaps of constant width. Every curve is the same exact
+# ellipse (rx 31, ry 13), and one gradient spans the whole body.
+def _segment(top, bottom):
+    return f'<path d="M9 {top}V{bottom}A31 13 0 0 0 71 {bottom}V{top}A31 13 0 0 1 9 {top}Z"/>'
+
+
+CYL_DEFS = ('<linearGradient id="ecb" gradientUnits="userSpaceOnUse" x1="9" y1="6" x2="60" y2="72">'
+            '<stop stop-color="#0086fa"/><stop offset="1" stop-color="#0051b9"/></linearGradient>'
+            '<linearGradient id="ect" gradientUnits="userSpaceOnUse" x1="9" y1="6" x2="55" y2="32">'
+            '<stop stop-color="#45adff"/><stop offset="1" stop-color="#0a80f2"/></linearGradient>')
+CYL = (f'<g fill="url(#ecb)">{_segment(23, 39)}{_segment(43, 59)}</g>'
+       '<ellipse cx="40" cy="19" rx="31" ry="13" fill="url(#ect)"/>')
 FONT = 'font-family="Arial, Helvetica, sans-serif" font-weight="700"'
 
 # word colour, "Cloud" colour
@@ -79,6 +88,14 @@ def centred(colours):
     return svg(w, 158, body)
 
 
+def app_icon(size=1024):
+    """Square app icon / favicon: the cylinder alone, centred, transparent."""
+    body = f'<g transform="translate(4,3) scale(0.9)">{CYL}</g>'
+    return (f'<?xml version="1.0" encoding="UTF-8"?>\n'
+            f'<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 80 80">'
+            f'<defs>{CYL_DEFS}</defs>{body}</svg>\n')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--desktop", type=Path, help="desktopnextcloud checkout to update the wizard logo in")
@@ -91,10 +108,16 @@ def main():
     (img / "logo" / "logo.svg").write_text(stacked(ON_DARK))
     (img / "edalvix" / "header-logo-light.svg").write_text(inline(ON_LIGHT))
     (img / "edalvix" / "header-logo-dark.svg").write_text(inline(ON_DARK))
-    print("server logos written")
+    (assets / "favicon.svg").write_text(app_icon())
+    (img / "favicon.svg").write_text(app_icon())
+    print("server logos written (render assets/favicon.png from favicon.svg)")
     if args.desktop:
-        (args.desktop / "theme" / "colored" / "wizard_logo.svg").write_text(centred(ON_LIGHT))
-        print("desktop wizard_logo.svg written (render the PNGs from it)")
+        colored = args.desktop / "theme" / "colored"
+        (colored / "wizard_logo.svg").write_text(centred(ON_LIGHT))
+        for name in ("EdalvixCloud-icon.svg", "br.com.edalvix.cloud.edalvixcloud-icon.svg",
+                     "EdalvixCloud-w10startmenu.svg", "icons/EdalvixCloud-icon-win-folder.svg"):
+            (colored / name).write_text(app_icon())
+        print("desktop icons and wizard_logo.svg written (render the PNGs from them)")
 
 
 if __name__ == "__main__":
