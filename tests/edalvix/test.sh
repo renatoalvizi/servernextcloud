@@ -21,7 +21,7 @@ tar -cjf "$WORK/nextcloud.tar.bz2" -C "$WORK/src" nextcloud
 
 # apply-theme.sh
 bash "$SCRIPTS/apply-theme.sh" "$WORK/src/nextcloud" > /dev/null
-for f in defaults.php core/css/server.css core/css/guest.css core/img/logo/logo.svg core/img/favicon.svg assets/logo.svg assets/logoheader.svg assets/favicon.svg assets/favicon.png; do
+for f in defaults.php core/css/server.css core/css/guest.css core/img/edalvix/header-logo-light.svg core/img/edalvix/header-logo-dark.svg core/img/edalvix/network-lines.svg core/img/logo/logo.svg core/img/favicon.svg assets/logo.svg assets/logoheader.svg assets/favicon.svg assets/favicon.png; do
   [ -f "$WORK/src/nextcloud/themes/edalvix/$f" ] || fail "theme file missing: $f"
 done
 if bash "$SCRIPTS/apply-theme.sh" "$WORK/nope" 2> /dev/null; then fail "apply-theme accepted a non-Nextcloud dir"; fi
@@ -35,7 +35,8 @@ NEXTCLOUD_TARBALL="$WORK/nextcloud.tar.bz2" bash "$SCRIPTS/build-release.sh" 32.
 for f in edalvix-cloud-32.0.1.tar.bz2 edalvix-cloud-32.0.1.zip edalvix-cloud-32.0.1.tar.bz2.sha256 edalvix-cloud-32.0.1.zip.sha512; do
   [ -f "$WORK/dist/$f" ] || fail "package missing: $f"
 done
-tar -tjf "$WORK/dist/edalvix-cloud-32.0.1.tar.bz2" | grep -q '^nextcloud/themes/edalvix/defaults.php$' || fail "theme not packaged"
+listing="$(tar -tjf "$WORK/dist/edalvix-cloud-32.0.1.tar.bz2")"
+grep -qx 'nextcloud/themes/edalvix/defaults.php' <<< "$listing" || fail "theme not packaged"
 (cd "$WORK/dist" && sha256sum -c --quiet edalvix-cloud-32.0.1.tar.bz2.sha256) || fail "bad checksum"
 
 # provision-tenant.sh installs the theme itself when missing, before changing anything

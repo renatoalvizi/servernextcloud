@@ -1,67 +1,209 @@
 /*
- * Edalvix Cloud: Nextcloud styled like edalvix.com.br
- * Loaded after Nextcloud's own core/css/server.css (theme override).
- * Colors that the Theming app controls (primary #0068ce, background #071d33)
- * are set by provision-tenant.sh; this file adjusts shapes, type and buttons.
+ * Edalvix Cloud: Nextcloud as a continuation of edalvix.com.br
+ *
+ * Loaded on every page, before Nextcloud's theme variables, so colour
+ * variables use !important. Values come from the site's styles.css (light)
+ * and dark.css (dark), and follow the same rule as the site: dark when the
+ * system is dark (theme "default"), or when the user picks the dark theme.
  *
  * SPDX-FileCopyrightText: 2026 EDALVIX
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-/* Brand tokens (same as the site) */
-:root,
-body {
-	--edalvix-navy: #071d33;
-	--edalvix-navy-hover: #294868;
-	--edalvix-cloud: #0068ce;
-	--edalvix-ink: #263b51;
-	--edalvix-muted: #626e7b;
-	--edalvix-line: #dce1e6;
-	--edalvix-pale: #f2f4f6;
-	/* Primary button (3D gradient, as on edalvix.com.br) */
-	--edalvix-btn-gradient: linear-gradient(135deg, #0a2f72 0%, #0753bd 50%, #0198f4 100%);
-	--edalvix-btn-gradient-hover: linear-gradient(135deg, #0d3a88 0%, #0a63d6 50%, #2aaaf7 100%);
-	--edalvix-btn-edge: #062355;
-	--edalvix-btn-shadow: 0 4px 0 var(--edalvix-btn-edge), 0 6px 12px rgba(0, 104, 206, .18);
-	--edalvix-btn-shadow-hover: 0 5px 0 var(--edalvix-btn-edge), 0 8px 16px rgba(0, 104, 206, .24);
-	--edalvix-btn-shadow-active: 0 2px 0 var(--edalvix-btn-edge), 0 4px 10px rgba(0, 104, 206, .2);
+/* ===================================================================
+ * 1. Tokens: light (site styles.css)
+ * =================================================================== */
+body[data-theme-light],
+body[data-theme-default],
+body[data-theme-light-highcontrast] {
+	/* Site palette */
+	--ex-navy: #061430;
+	--ex-blue: #0877ff;
+	--ex-cyan: #3edcff;
+	--ex-ink: #102443;
+	--ex-muted: #5e6b80;
+	--ex-line: #dce6f2;
+	--ex-pale: #f5f8fd;
+	--ex-eyebrow: #52759e;
+	--ex-nav-text: #29405e;
+	--ex-page: linear-gradient(180deg, #f5f9ff, #eef4fc);
+	--ex-header-bg: rgba(255, 254, 254, .94);
+	--ex-card-border: #d5e4f6;
+	--ex-card-bg: linear-gradient(155deg, #fff, #fff 67%, #f4f9ff);
+	--ex-card-shadow: 0 13px 32px rgba(11, 44, 98, .06), inset 0 1px 0 #fff;
+	--ex-link: #0b285b;
+	--ex-header-logo: url('../img/edalvix/header-logo-light.svg');
+
+	/* Nextcloud variables mapped to the site */
+	--color-main-background: #ffffff !important;
+	--color-main-background-rgb: 255, 255, 255 !important;
+	--color-main-background-blur: rgba(255, 255, 255, .86) !important;
+	--color-main-text: #102443 !important;
+	--color-text-maxcontrast: #5e6b80 !important;
+	--color-text-maxcontrast-default: #5e6b80 !important;
+	--color-text-maxcontrast-background-blur: #4f5d72 !important;
+	--color-border: #dce6f2 !important;
+	--color-border-dark: #c7d6e8 !important;
+	--color-border-maxcontrast: #8597ad !important;
+	--color-background-hover: #f2f7fe !important;
+	--color-background-dark: #e8f0fa !important;
+	--color-background-darker: #dbe6f4 !important;
+	--color-primary: #0762d7 !important;
+	--color-primary-element: #0762d7 !important;
+	--color-primary-element-hover: #0b55b8 !important;
+	--color-primary-element-text: #ffffff !important;
+	--color-primary-element-light: #e7f1ff !important;
+	--color-primary-element-light-hover: #d6e8ff !important;
+	--color-primary-element-light-text: #0b3b8f !important;
+	--color-primary-light: #e7f1ff !important;
+	--color-primary-text: #ffffff !important;
+	--color-background-plain: #f5f9ff !important;
+	--color-background-plain-text: #29405e !important;
 }
 
-/* Typography and square corners, as on the site */
+/* ===================================================================
+ * 2. Tokens: dark (site dark.css)
+ * =================================================================== */
+body[data-theme-dark],
+body[data-theme-dark-highcontrast] {
+	--ex-navy: #071426;
+	--ex-blue: #6bb4ff;
+	--ex-cyan: #6ccfff;
+	--ex-ink: #eef5ff;
+	--ex-muted: #aec1d8;
+	--ex-line: #29415e;
+	--ex-pale: #0d213b;
+	--ex-eyebrow: #85add2;
+	--ex-nav-text: #d4e3f5;
+	--ex-page: #071426;
+	--ex-header-bg: rgba(8, 24, 46, .95);
+	--ex-card-border: #2b4868;
+	--ex-card-bg: linear-gradient(150deg, #132e4c, #10243f 72%, #0c2039);
+	--ex-card-shadow: 0 15px 35px rgba(1, 9, 22, .33), inset 0 1px 0 rgba(255, 255, 255, .07);
+	--ex-link: #8dc9ff;
+	--ex-header-logo: url('../img/edalvix/header-logo-dark.svg');
+
+	--color-main-background: #10243f !important;
+	--color-main-background-rgb: 16, 36, 63 !important;
+	--color-main-background-blur: rgba(16, 36, 63, .86) !important;
+	--color-main-text: #eef5ff !important;
+	--color-text-maxcontrast: #aec1d8 !important;
+	--color-text-maxcontrast-default: #aec1d8 !important;
+	--color-text-maxcontrast-background-blur: #bdd0e5 !important;
+	--color-border: #29415e !important;
+	--color-border-dark: #355273 !important;
+	--color-border-maxcontrast: #6f8cad !important;
+	--color-background-hover: #16304f !important;
+	--color-background-dark: #1b3d63 !important;
+	--color-background-darker: #23466e !important;
+	--color-primary: #4aa8ff !important;
+	--color-primary-element: #4aa8ff !important;
+	--color-primary-element-hover: #6bb9ff !important;
+	--color-primary-element-text: #061430 !important;
+	--color-primary-element-light: #16365a !important;
+	--color-primary-element-light-hover: #1c4170 !important;
+	--color-primary-element-light-text: #b9dcff !important;
+	--color-primary-light: #16365a !important;
+	--color-primary-text: #061430 !important;
+	--color-background-plain: #071426 !important;
+	--color-background-plain-text: #d4e3f5 !important;
+}
+
+/* Theme "default" follows the system, like the site's dark.css */
+@media (prefers-color-scheme: dark) {
+	body[data-theme-default] {
+		--ex-navy: #071426;
+		--ex-blue: #6bb4ff;
+		--ex-cyan: #6ccfff;
+		--ex-ink: #eef5ff;
+		--ex-muted: #aec1d8;
+		--ex-line: #29415e;
+		--ex-pale: #0d213b;
+		--ex-eyebrow: #85add2;
+		--ex-nav-text: #d4e3f5;
+		--ex-page: #071426;
+		--ex-header-bg: rgba(8, 24, 46, .95);
+		--ex-card-border: #2b4868;
+		--ex-card-bg: linear-gradient(150deg, #132e4c, #10243f 72%, #0c2039);
+		--ex-card-shadow: 0 15px 35px rgba(1, 9, 22, .33), inset 0 1px 0 rgba(255, 255, 255, .07);
+		--ex-link: #8dc9ff;
+		--ex-header-logo: url('../img/edalvix/header-logo-dark.svg');
+
+		--color-main-background: #10243f !important;
+		--color-main-background-rgb: 16, 36, 63 !important;
+		--color-main-background-blur: rgba(16, 36, 63, .86) !important;
+		--color-main-text: #eef5ff !important;
+		--color-text-maxcontrast: #aec1d8 !important;
+		--color-text-maxcontrast-default: #aec1d8 !important;
+		--color-text-maxcontrast-background-blur: #bdd0e5 !important;
+		--color-border: #29415e !important;
+		--color-border-dark: #355273 !important;
+		--color-border-maxcontrast: #6f8cad !important;
+		--color-background-hover: #16304f !important;
+		--color-background-dark: #1b3d63 !important;
+		--color-background-darker: #23466e !important;
+		--color-primary: #4aa8ff !important;
+		--color-primary-element: #4aa8ff !important;
+		--color-primary-element-hover: #6bb9ff !important;
+		--color-primary-element-text: #061430 !important;
+		--color-primary-element-light: #16365a !important;
+		--color-primary-element-light-hover: #1c4170 !important;
+		--color-primary-element-light-text: #b9dcff !important;
+		--color-primary-light: #16365a !important;
+		--color-primary-text: #061430 !important;
+		--color-background-plain: #071426 !important;
+		--color-background-plain-text: #d4e3f5 !important;
+	}
+}
+
+/* ===================================================================
+ * 3. Shared: type, shapes and the site's button system
+ * =================================================================== */
 body {
 	--font-face: Arial, Helvetica, sans-serif !important;
-	--border-radius: 2px !important;
-	--border-radius-small: 2px !important;
-	--border-radius-element: 2px !important;
-	--border-radius-large: 4px !important;
-	--border-radius-container: 4px !important;
-	--border-radius-container-large: 6px !important;
-	--border-radius-pill: 2px !important;
+	--border-radius-small: 6px !important;
+	--border-radius: 8px !important;
+	--border-radius-element: 10px !important;
+	--border-radius-large: 12px !important;
+	--border-radius-container: 12px !important;
+	--border-radius-container-large: 17px !important;
+	--body-container-radius: 17px !important;
+	--body-container-margin: 12px !important;
+
+	/* Button system of the site ("Área do cliente") */
+	--ex-btn-grad: linear-gradient(135deg, #0b2a63, #0762d7 65%, #01aaff);
+	--ex-btn-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), 0 3px 0 #052355, 0 10px 22px rgba(7, 98, 215, .25);
+	--ex-btn-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, .67), 0 5px 0 #052355, 0 14px 28px rgba(7, 98, 215, .32);
+	--ex-btn-shadow-active: inset 0 1px 3px rgba(0, 28, 85, .67), 0 1px 0 #052355;
 	font-family: var(--font-face);
+	-webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3,
-.app-content h2,
-.settings-section__name {
-	font-weight: 500;
-	letter-spacing: -0.02em;
+.app-content h2 {
+	font-weight: 750;
+	letter-spacing: -0.03em;
 }
 
-/* Primary buttons: 3D gradient, rounded, white bold text; pressed on click */
+:focus-visible {
+	outline-color: var(--ex-cyan) !important;
+}
+
+/* Primary buttons = .glossy-button / .header-client */
 .button-vue--vue-primary,
 .button-vue--primary,
 button.primary,
 input[type="submit"].primary,
 input[type="button"].primary,
 .button.primary {
-	background: var(--edalvix-btn-gradient) !important;
+	background: var(--ex-btn-grad) !important;
 	border: 0 !important;
 	border-radius: 10px !important;
 	color: #fff !important;
-	font-weight: 700;
-	box-shadow: var(--edalvix-btn-shadow) !important;
-	text-shadow: 0 1px 1px rgba(7, 29, 51, .25);
-	transition: transform .15s, box-shadow .15s, background .2s;
+	font-weight: 800 !important;
+	text-shadow: 0 1px 0 rgba(0, 21, 60, .35);
+	box-shadow: var(--ex-btn-shadow) !important;
+	transition: transform .2s ease, box-shadow .2s ease, filter .2s ease !important;
 }
 
 .button-vue--vue-primary:hover:not(:disabled),
@@ -69,10 +211,10 @@ input[type="button"].primary,
 button.primary:hover:not(:disabled),
 input[type="submit"].primary:hover:not(:disabled),
 input[type="button"].primary:hover:not(:disabled),
-.button.primary:hover:not(:disabled) {
-	background: var(--edalvix-btn-gradient-hover) !important;
-	box-shadow: var(--edalvix-btn-shadow-hover) !important;
-	transform: translateY(-1px);
+.button.primary:hover {
+	transform: translateY(-2px);
+	filter: saturate(1.08) brightness(1.04);
+	box-shadow: var(--ex-btn-shadow-hover) !important;
 }
 
 .button-vue--vue-primary:active:not(:disabled),
@@ -80,42 +222,145 @@ input[type="button"].primary:hover:not(:disabled),
 button.primary:active:not(:disabled),
 input[type="submit"].primary:active:not(:disabled),
 input[type="button"].primary:active:not(:disabled),
-.button.primary:active:not(:disabled) {
-	box-shadow: var(--edalvix-btn-shadow-active) !important;
-	transform: translateY(3px);
+.button.primary:active {
+	transform: translateY(1px);
+	filter: none;
+	box-shadow: var(--ex-btn-shadow-active) !important;
 }
 
-/* Secondary buttons: outlined, like the site's light buttons */
+/* Secondary buttons = the site's outlined buttons */
 .button-vue--vue-secondary,
 .button-vue--secondary {
-	border: 1px solid var(--edalvix-line) !important;
+	background: var(--color-main-background) !important;
+	border: 1px solid var(--ex-card-border) !important;
+	color: var(--ex-link) !important;
+	font-weight: 700 !important;
 	border-radius: 10px !important;
-	font-weight: 600;
 }
 
-/* Inputs: thin border, square corners */
-input[type="text"],
-input[type="password"],
-input[type="email"],
-input[type="search"],
-input[type="url"],
-input[type="tel"],
-input[type="number"],
-textarea,
-select {
-	border-radius: 2px !important;
+.button-vue--vue-secondary:hover:not(:disabled),
+.button-vue--secondary:hover:not(:disabled) {
+	border-color: var(--ex-blue) !important;
+	color: var(--ex-blue) !important;
 }
 
-/* Cards and popovers: white panel, thin line, Cloud accent on top */
-.modal-container,
-.app-settings-modal .modal-container {
-	border-radius: 4px !important;
-	border-top: 3px solid var(--edalvix-cloud);
-	box-shadow: 0 8px 24px rgba(7, 29, 51, .08);
+/* ===================================================================
+ * 4. Frame: page background and header, like the site header
+ * =================================================================== */
+#body-user,
+#body-settings,
+#body-public {
+	background: var(--ex-page) !important;
 }
 
-/* Navigation: selected item uses the Cloud blue accent bar, like the site's cards */
+#body-user #header,
+#body-settings #header {
+	background: var(--ex-header-bg) !important;
+	border-bottom: 1px solid var(--ex-line);
+	-webkit-backdrop-filter: blur(18px);
+	backdrop-filter: blur(18px);
+}
+
+/* Brand: the colour lockup instead of the single white icon */
+#body-user #nextcloud,
+#body-settings #nextcloud {
+	width: auto !important;
+	min-width: 214px;
+	padding-inline: 14px 8px !important;
+}
+
+#body-user #header .logo,
+#body-user #header .logo-icon,
+#body-settings #header .logo,
+#body-settings #header .logo-icon {
+	background-image: var(--ex-header-logo) !important;
+	background-size: contain !important;
+	background-position: left center !important;
+	background-repeat: no-repeat !important;
+	width: 190px !important;
+	filter: none !important;
+}
+
+/* Only the Files app exists: no app menu */
+#header .app-menu {
+	display: none !important;
+}
+
+/* Header search: site input style, with Edalvix wording */
+.unified-search-input__input {
+	border-radius: 10px !important;
+	border: 1px solid var(--ex-line) !important;
+	background: var(--color-main-background) !important;
+	color: var(--ex-ink) !important;
+}
+
+/* The theme cannot translate this core JS string, so swap the text with CSS */
+.unified-search-input__label {
+	font-size: 0 !important;
+}
+
+.unified-search-input__label::after {
+	content: "Buscar arquivos";
+	font-size: 14px;
+	color: var(--ex-muted);
+}
+
+/* ===================================================================
+ * 5. Panels: navigation and content as the site's cards
+ * =================================================================== */
+#content-vue,
+#content {
+	border: 1px solid var(--ex-card-border);
+	box-shadow: var(--ex-card-shadow);
+	background: var(--ex-card-bg) !important;
+}
+
+.app-navigation {
+	background: var(--ex-pale) !important;
+	border-right: 1px solid var(--ex-line);
+}
+
+.app-navigation-entry .app-navigation-entry__name {
+	font-weight: 700;
+	color: var(--ex-nav-text);
+}
+
 .app-navigation-entry.active,
 .app-navigation-entry--active {
-	box-shadow: inset 3px 0 0 var(--edalvix-cloud);
+	background: var(--color-primary-element-light) !important;
+	box-shadow: inset 4px 0 0 var(--ex-blue);
+}
+
+.app-navigation-entry.active .app-navigation-entry__name,
+.app-navigation-entry--active .app-navigation-entry__name {
+	color: var(--color-primary-element-light-text) !important;
+}
+
+/* File list header = the site's "eyebrow" labels */
+.files-list__row-head th,
+.files-list__row-head .files-list__column-sort-button,
+.files-list__row-head .button-vue__text {
+	font-size: 10px !important;
+	font-weight: 800 !important;
+	letter-spacing: .14em;
+	text-transform: uppercase;
+	color: var(--ex-eyebrow) !important;
+}
+
+.files-list__row:hover,
+.files-list__row--hover {
+	background: var(--color-background-hover) !important;
+}
+
+/* Dialogs and menus as cards, with the product accent on top */
+.modal-container {
+	border-radius: 17px !important;
+	border: 1px solid var(--ex-card-border);
+	border-top: 4px solid var(--ex-blue) !important;
+	box-shadow: 0 24px 45px rgba(11, 44, 98, .14) !important;
+}
+
+.v-popper__inner {
+	border-radius: 12px !important;
+	border: 1px solid var(--ex-card-border);
 }
