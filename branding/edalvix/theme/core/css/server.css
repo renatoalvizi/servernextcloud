@@ -10,6 +10,10 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+/* Interface icons in the site style (generated) */
+@import url('icons.css');
+
+
 /* ===================================================================
  * 1. Tokens: light (site styles.css)
  * =================================================================== */
@@ -499,7 +503,8 @@ body[data-theme-dark-highcontrast] {
  * It stays in its place in the page; on wide screens with the sidebar open
  * it is only drawn over the sidebar. */
 @media (min-width: 1024px) {
-	#content-vue:has(.app-navigation:not(.app-navigation--close)) .app-navigation__content {
+	/* Room for the button, only on pages that have it (not in Settings) */
+	#content-vue:has(.files-list__header-upload-button):has(.app-navigation:not(.app-navigation--close)) .app-navigation__content {
 		padding-top: 78px !important;
 	}
 
@@ -536,9 +541,10 @@ body[data-theme-dark-highcontrast] {
  * Icons in the site style
  * ------------------------------------------------------------------- */
 /* Folders (drawn by the Files app, not through the file type icons) */
-.files-list__row-icon .folder-icon,
-.files-list__row-icon .folder-open-icon {
-	background: url('../img/edalvix/folder.svg') center / contain no-repeat;
+.files-list__row-icon .material-design-icon.folder-icon,
+.files-list__row-icon .material-design-icon.folder-open-icon {
+	background: url('../img/edalvix/folder.svg') center / contain no-repeat !important;
+	filter: none !important;
 }
 
 .files-list__row-icon .folder-icon svg,
@@ -546,15 +552,7 @@ body[data-theme-dark-highcontrast] {
 	visibility: hidden;
 }
 
-/* Share action: only the "add person" icon (not yet shared). Matched by
- * its drawing, since Nextcloud gives it no class of its own. */
-.files-list__row-action-sharing-status .files-list__row-action-icon:has(path[d^="M15,4A4,4"]) {
-	background: url('../img/edalvix/share.svg') center / 24px 24px no-repeat;
-}
-
-.files-list__row-action-sharing-status .files-list__row-action-icon:has(path[d^="M15,4A4,4"]) svg {
-	visibility: hidden;
-}
+/* Share action: see icons.css (Edalvix "add person" icon) */
 
 /* File list header = the site's "eyebrow" labels */
 .files-list__row-head th,
