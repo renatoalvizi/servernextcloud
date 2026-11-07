@@ -312,11 +312,34 @@ input[type="button"].primary:active:not(:disabled),
 /* ===================================================================
  * 5. Panels: navigation and content as the site's cards
  * =================================================================== */
+/* Frame flush with the window: the sidebar is a straight full-height column
+ * (no rounded corners); the content panel keeps one soft corner where it
+ * meets the sidebar, as a card */
 #content-vue,
 #content {
-	border: 1px solid var(--ex-card-border);
-	box-shadow: var(--ex-card-shadow);
-	background: var(--ex-card-bg) !important;
+	margin: var(--header-height) 0 0 0 !important;
+	width: 100% !important;
+	height: calc(100% - var(--header-height)) !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	background: var(--ex-nav-bg) !important;
+}
+
+#content-vue .app-navigation,
+#content .app-navigation {
+	border-radius: 0 !important;
+}
+
+#app-content-vue,
+#app-content {
+	border-radius: 17px 0 0 0 !important;
+	border: 0 !important;
+	border-top: 1px solid var(--ex-card-border) !important;
+	border-left: 1px solid var(--ex-card-border) !important;
+	box-shadow: -6px 0 24px rgba(11, 44, 98, .05);
+	/* solid, like the file list on it (a gradient showed a band below the list) */
+	background: var(--color-main-background) !important;
 }
 
 /* -------------------------------------------------------------------
