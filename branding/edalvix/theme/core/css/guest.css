@@ -92,15 +92,12 @@
 	backdrop-filter: none !important;
 }
 
-/* Product accent bar on top of the card */
-.guest-box:not(footer)::before,
-.login-box::before {
-	content: "";
-	position: absolute;
-	inset: 0 0 auto;
-	height: 4px;
-	border-radius: 17px 17px 0 0;
-	background: var(--ex-blue);
+/* Product accent bar on top of the card: drawn as the card's top border so
+ * it follows the rounded corners (a separate 4px bar with 17px corners got
+ * its radius scaled down and stuck out of the curves) */
+.guest-box:not(footer),
+.login-box {
+	border-top: 4px solid var(--ex-blue) !important;
 }
 
 /* Title with the site's eyebrow label above it */
@@ -211,11 +208,27 @@ footer .info a:visited {
 	color: #eff8ff !important;
 }
 
-/* Login logo: larger, it is the brand on the start screen */
-#header.header-guest .logo {
-	width: 340px !important;
-	max-width: 86vw;
-	height: 100px !important;
-	background-size: contain !important;
-	background-position: center !important;
+/* Logo inside the card, large: the header logo (outside the card) is hidden
+ * and the card draws the logo at its top. Navy wordmark on the white card,
+ * light wordmark on the dark card. */
+#body-login {
+	--ex-card-logo: url('../../assets/logo-dark.svg');
+}
+
+@media (prefers-color-scheme: dark) {
+	#body-login {
+		--ex-card-logo: url('../../assets/logo.svg');
+	}
+}
+
+#header.header-guest {
+	display: none !important;
+}
+
+.guest-box:not(footer),
+.login-box {
+	background:
+		var(--ex-card-logo) center 40px / min(330px, calc(100% - 64px)) auto no-repeat,
+		var(--ex-card-bg) !important;
+	padding-top: 158px !important;
 }
