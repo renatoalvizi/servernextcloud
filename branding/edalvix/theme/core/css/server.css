@@ -598,8 +598,10 @@ body[data-theme-dark-highcontrast] {
 	background: var(--color-background-hover) !important;
 }
 
-/* Dialogs and menus as cards, with the product accent on top */
-.modal-container {
+/* Dialogs and menus as cards, with the product accent on top. Not the
+ * viewer (photos, videos, PDFs) or other full-screen modals: they fill the
+ * screen and must stay edge to edge */
+.modal-container:not(#viewer .modal-container, .modal-wrapper--full .modal-container) {
 	border-radius: 17px !important;
 	border: 1px solid var(--ex-card-border);
 	border-top: 4px solid var(--ex-blue) !important;
