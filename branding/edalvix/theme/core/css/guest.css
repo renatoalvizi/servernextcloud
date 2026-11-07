@@ -101,9 +101,18 @@
 }
 
 /* Title with the site's eyebrow label above it */
-.guest-box h2,
+/* Login: title left like the form below it; other guest pages (errors,
+ * notices) centre the title like their centred text */
+.guest-box h2 {
+	text-align: center !important;
+}
+
 .login-box h2 {
 	text-align: left !important;
+}
+
+.guest-box h2,
+.login-box h2 {
 	font-size: 26px !important;
 	line-height: 1.12;
 	font-weight: 750 !important;
@@ -231,4 +240,16 @@ footer .info a:visited {
 		var(--ex-card-logo) center 40px / min(330px, calc(100% - 64px)) auto no-repeat,
 		var(--ex-card-bg) !important;
 	padding-top: 158px !important;
+}
+
+/* Phones: keep the card off the screen edges */
+@media (max-width: 520px) {
+	.guest-box:not(footer),
+	.login-box {
+		margin: 16px auto !important;
+		width: calc(100% - 32px) !important;
+		box-sizing: border-box;
+		padding-left: 22px !important;
+		padding-right: 22px !important;
+	}
 }
