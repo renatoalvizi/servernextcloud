@@ -818,3 +818,98 @@ td.files-list__row-mtime,
 label:not(.input-field__label):not(.checkbox-radio-switch__label) {
 	font-weight: 600;
 }
+
+/* ===================================================================
+ * 8. Fixes: vertical centring of sidebar items, settings icons, and the
+ *    upload progress under the relocated "Novo" button
+ * =================================================================== */
+/* Items are 46px tall, Nextcloud aligns their content for 34px */
+.app-navigation-entry .app-navigation-entry-link {
+	align-items: center !important;
+}
+
+.app-navigation-entry .app-navigation-entry__name {
+	line-height: 46px !important;
+}
+
+.app-navigation-entry .app-navigation-entry-icon {
+	align-self: center;
+}
+
+/* Settings sidebar icons (images) at the same size as the Files icons */
+.app-navigation-entry .app-navigation-entry-icon img {
+	width: 20px !important;
+	height: 20px !important;
+}
+
+/* Upload in progress: button on top, then progress bar, time left and cancel */
+@media (min-width: 1024px) {
+	#content-vue:has(.upload-picker--uploading):has(.app-navigation:not(.app-navigation--close)) .app-navigation__content {
+		padding-top: 128px !important;
+	}
+
+	#content-vue:has(.app-navigation:not(.app-navigation--close)) .upload-picker--uploading {
+		display: grid !important;
+		grid-template-columns: 1fr auto;
+		align-items: center;
+		row-gap: 10px;
+		column-gap: 6px;
+	}
+
+	#content-vue:has(.app-navigation:not(.app-navigation--close)) .upload-picker--uploading > .action-item {
+		grid-column: 1 / -1;
+	}
+
+	#content-vue:has(.app-navigation:not(.app-navigation--close)) .upload-picker--uploading .upload-picker__progress {
+		width: auto !important;
+		max-width: none !important;
+		margin: 0 !important;
+		padding-left: 4px;
+	}
+}
+
+.upload-picker__progress .progress-bar {
+	height: 8px !important;
+	border: 0;
+	border-radius: 99px !important;
+	background: var(--ex-quota-track, #fff) !important;
+	box-shadow: inset 0 0 0 1px var(--ex-quota-border, #cfe2fb);
+	-webkit-appearance: none;
+	appearance: none;
+	overflow: hidden;
+}
+
+.upload-picker__progress .progress-bar::-webkit-progress-bar {
+	background: transparent;
+}
+
+.upload-picker__progress .progress-bar::-webkit-progress-value {
+	background: var(--ex-btn-grad);
+	border-radius: 99px;
+}
+
+.upload-picker__progress .progress-bar::-moz-progress-bar {
+	background: var(--ex-btn-grad);
+	border-radius: 99px;
+}
+
+.upload-picker__progress p,
+.upload-picker__progress span {
+	font-size: 12px !important;
+	font-weight: 600;
+	color: var(--ex-muted) !important;
+}
+
+/* Upload speed always visible: Nextcloud puts "time left (speed)" in the
+ * label's tooltip and shows only the time; show the full tooltip text */
+.upload-picker__progress p > span[title] {
+	font-size: 0 !important;
+}
+
+.upload-picker__progress p > span[title]::before {
+	content: attr(title);
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--ex-muted);
+	white-space: nowrap;
+}
