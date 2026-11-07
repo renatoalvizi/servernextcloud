@@ -12,6 +12,13 @@ body {
 	--border-radius-element: 2px !important;
 	--border-radius-large: 4px !important;
 	--border-radius-pill: 2px !important;
+	/* Primary button (3D gradient, as on edalvix.com.br) */
+	--edalvix-btn-gradient: linear-gradient(135deg, #0a2f72 0%, #0753bd 50%, #0198f4 100%);
+	--edalvix-btn-gradient-hover: linear-gradient(135deg, #0d3a88 0%, #0a63d6 50%, #2aaaf7 100%);
+	--edalvix-btn-edge: #062355;
+	--edalvix-btn-shadow: 0 5px 0 var(--edalvix-btn-edge), 0 10px 24px rgba(0, 104, 206, .22);
+	--edalvix-btn-shadow-hover: 0 6px 0 var(--edalvix-btn-edge), 0 14px 28px rgba(0, 104, 206, .28);
+	--edalvix-btn-shadow-active: 0 2px 0 var(--edalvix-btn-edge), 0 4px 10px rgba(0, 104, 206, .2);
 	font-family: var(--font-face);
 }
 
@@ -33,7 +40,7 @@ body {
 	color: #071d33;
 }
 
-/* Login and other primary buttons: navy, white text, lift on hover */
+/* Login and other primary buttons: 3D gradient, as on edalvix.com.br */
 .guest-box .button-vue--vue-primary,
 .guest-box .button-vue--primary,
 .guest-box button.primary,
@@ -41,29 +48,42 @@ body {
 .login-box .button-vue--vue-primary,
 .login-box .button-vue--primary,
 .login-box input[type="submit"] {
-	background-color: #071d33 !important;
-	border: 1px solid #071d33 !important;
+	background: var(--edalvix-btn-gradient) !important;
+	border: 0 !important;
+	border-radius: 10px !important;
 	color: #fff !important;
-	font-weight: 600;
-	border-radius: 2px !important;
-	transition: background-color .2s, transform .2s;
+	font-weight: 700;
+	box-shadow: var(--edalvix-btn-shadow) !important;
+	text-shadow: 0 1px 1px rgba(7, 29, 51, .25);
+	transition: transform .15s, box-shadow .15s, background .2s;
 }
 
 .guest-box .button-vue--vue-primary:hover:not(:disabled),
 .guest-box .button-vue--primary:hover:not(:disabled),
 .guest-box button.primary:hover:not(:disabled),
-.guest-box input[type="submit"]:hover,
+.guest-box input[type="submit"]:hover:not(:disabled),
 .login-box .button-vue--vue-primary:hover:not(:disabled),
 .login-box .button-vue--primary:hover:not(:disabled),
-.login-box input[type="submit"]:hover {
-	background-color: #294868 !important;
-	border-color: #294868 !important;
+.login-box input[type="submit"]:hover:not(:disabled) {
+	background: var(--edalvix-btn-gradient-hover) !important;
+	box-shadow: var(--edalvix-btn-shadow-hover) !important;
 	transform: translateY(-1px);
 }
 
-.guest-box input,
-.login-box input {
-	border-radius: 2px !important;
+.guest-box .button-vue--vue-primary:active:not(:disabled),
+.guest-box .button-vue--primary:active:not(:disabled),
+.guest-box button.primary:active:not(:disabled),
+.guest-box input[type="submit"]:active:not(:disabled),
+.login-box .button-vue--vue-primary:active:not(:disabled),
+.login-box .button-vue--primary:active:not(:disabled),
+.login-box input[type="submit"]:active:not(:disabled) {
+	box-shadow: var(--edalvix-btn-shadow-active) !important;
+	transform: translateY(3px);
+}
+
+.guest-box input:not([type="submit"]),
+.login-box input:not([type="submit"]) {
+	border-radius: 6px !important;
 }
 
 /* Footer: product first, company as a quiet signature */
