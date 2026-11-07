@@ -269,7 +269,7 @@ input[type="button"].primary:active:not(:disabled),
 #body-user #nextcloud,
 #body-settings #nextcloud {
 	width: auto !important;
-	min-width: 214px;
+	min-width: 240px;
 	padding-inline: 14px 8px !important;
 }
 
@@ -281,7 +281,7 @@ input[type="button"].primary:active:not(:disabled),
 	background-size: contain !important;
 	background-position: left center !important;
 	background-repeat: no-repeat !important;
-	width: 190px !important;
+	width: 216px !important;
 	filter: none !important;
 }
 

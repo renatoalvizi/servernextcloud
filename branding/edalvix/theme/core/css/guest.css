@@ -210,3 +210,12 @@ footer .info a:visited {
 	font-weight: 800 !important;
 	color: #eff8ff !important;
 }
+
+/* Login logo: larger, it is the brand on the start screen */
+#header.header-guest .logo {
+	width: 340px !important;
+	max-width: 86vw;
+	height: 100px !important;
+	background-size: contain !important;
+	background-position: center !important;
+}
