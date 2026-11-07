@@ -973,3 +973,45 @@ label:not(.input-field__label):not(.checkbox-radio-switch__label) {
 		background-image: url('../img/favicon.svg') !important;
 	}
 }
+
+/* Public header "Baixar": compact, like the site's "Área do cliente" */
+#body-public #header .header-end .button-vue--vue-primary,
+#body-public #header .header-end .button-vue--primary {
+	min-height: 32px !important;
+	height: 32px !important;
+	padding: 0 12px !important;
+	border-radius: 8px !important;
+}
+
+#body-public #header .header-end .button-vue--vue-primary .button-vue__text,
+#body-public #header .header-end .button-vue--primary .button-vue__text {
+	font-size: 12px !important;
+}
+
+#body-public #header .header-end .button-vue--vue-primary .button-vue__icon,
+#body-public #header .header-end .button-vue--primary .button-vue__icon {
+	min-width: 18px !important;
+	width: 18px !important;
+	height: 18px !important;
+}
+
+#body-public #header .header-end .button-vue--vue-primary .button-vue__wrapper,
+#body-public #header .header-end .button-vue--primary .button-vue__wrapper {
+	gap: 6px;
+}
+
+/* Icons on primary (gradient) buttons are always white, also on dark themes
+ * (where Nextcloud's primary text colour is dark) */
+.button-vue--vue-primary .button-vue__icon,
+.button-vue--primary .button-vue__icon,
+.button-vue--vue-primary .material-design-icon,
+.button-vue--primary .material-design-icon {
+	color: #fff !important;
+}
+
+/* Legacy CSS icons (e.g. .icon-download) on primary buttons: Nextcloud
+ * inverts them, which turns the dark-mode white drawing black. Always white. */
+.button-vue--vue-primary .button-vue__icon .icon,
+.button-vue--primary .button-vue__icon .icon {
+	filter: brightness(0) invert(1) !important;
+}
