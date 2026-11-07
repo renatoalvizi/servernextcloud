@@ -678,3 +678,120 @@ body[data-theme-dark-highcontrast] {
 	letter-spacing: -0.02em;
 	text-shadow: 0 1px 2px rgba(0, 21, 60, .45);
 }
+
+/* ===================================================================
+ * 7. Typography of edalvix.com.br (Arial; weights 700-800; tight titles,
+ *    15px text with generous line height, small uppercase labels)
+ * =================================================================== */
+body {
+	--ex-title: #081d3b;
+	line-height: 1.55;
+}
+
+body[data-theme-dark],
+body[data-theme-dark-highcontrast] {
+	--ex-title: #f1f7ff;
+}
+
+@media (prefers-color-scheme: dark) {
+	body[data-theme-default] {
+		--ex-title: #f1f7ff;
+	}
+}
+
+/* Titles: weight 750, tight letter spacing (h2/h3 of the site) */
+h1, h2, h3, h4,
+.settings-section__name,
+.app-sidebar-header__mainname,
+.empty-content__name,
+.modal-container h2,
+.dialog__name,
+.preview-card__name {
+	font-family: var(--font-face) !important;
+	font-weight: 750 !important;
+	letter-spacing: -0.035em !important;
+	line-height: 1.12;
+}
+
+.settings-section__name,
+.app-sidebar-header__mainname,
+.empty-content__name,
+.modal-container h2,
+.dialog__name {
+	color: var(--ex-title) !important;
+}
+
+/* Current folder in the breadcrumb reads as the page title */
+.files-list__breadcrumbs .breadcrumb__crumbs .button-vue__text,
+.breadcrumb__crumbs .button-vue__text {
+	font-weight: 750 !important;
+	letter-spacing: -0.02em;
+	font-size: 17px !important;
+	color: var(--ex-title) !important;
+}
+
+/* Section labels = the site's eyebrow (menu captions, settings groups) */
+.app-navigation-caption,
+.app-navigation-caption__name {
+	font-size: 10px !important;
+	font-weight: 800 !important;
+	letter-spacing: .19em !important;
+	text-transform: uppercase;
+	color: var(--ex-eyebrow) !important;
+}
+
+/* Body text: 15px, generous line height, muted secondary text */
+.settings-section__desc,
+.app-sidebar-header__subname,
+.empty-content__description {
+	font-size: 15px;
+	line-height: 1.65;
+	color: var(--ex-muted) !important;
+}
+
+/* File names carry weight, like the site's card titles; extension stays light */
+.files-list__row-name-text {
+	font-weight: 600;
+	color: var(--ex-ink);
+}
+
+.files-list__row-name-ext {
+	font-weight: 400;
+	color: var(--ex-muted) !important;
+}
+
+/* Secondary data (size, date, totals): 13px like the site's small text */
+td.files-list__row-size,
+td.files-list__row-mtime,
+.files-list__row-footer td {
+	font-size: 13px !important;
+	color: var(--ex-muted) !important;
+}
+
+/* Actions: menu items and buttons in the site's bold link style */
+.action-button__text,
+.action-button__longtext,
+.action-link__text,
+.action-link__longtext,
+.action-router__text,
+.action-router__longtext {
+	font-size: 14px !important;
+	font-weight: 600 !important;
+	color: var(--ex-ink);
+}
+
+.button-vue__text {
+	font-weight: 700;
+	letter-spacing: .005em;
+}
+
+.button-vue--vue-primary .button-vue__text,
+.button-vue--primary .button-vue__text {
+	font-weight: 800 !important;
+	font-size: 14px;
+}
+
+/* Form labels outside the fields (labels inside act as placeholders) */
+label:not(.input-field__label):not(.checkbox-radio-switch__label) {
+	font-weight: 600;
+}
