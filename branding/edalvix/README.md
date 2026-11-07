@@ -81,6 +81,17 @@ bash branding/edalvix/scripts/build-release.sh 32.0.1 ./dist
 bash branding/edalvix/scripts/apply-theme.sh /var/www/nextcloud
 ```
 
+### Só o visual (sem mudar domínio nem configurações)
+
+Para uma instalação que já existe e deve manter o próprio endereço:
+
+```bash
+bash branding/edalvix/scripts/provision-tenant.sh -t -d /var/www/nextcloud
+```
+
+Aplica tema, nome, cores, logos, ícones e links dos clientes. Não mexe em
+domínio, HTTPS, idioma, pasta inicial, miniaturas nem apps.
+
 ### 3. Configurar o cliente `algumaempresa`
 
 ```bash

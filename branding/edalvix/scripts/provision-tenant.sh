@@ -6,10 +6,13 @@
 # reachable at https://<tenant>.edalvix.cloud. Safe to run again.
 #
 # Usage: provision-tenant.sh [options] <tenant>
+#        provision-tenant.sh -t [options]        (look only)
 #   -d DIR     Nextcloud directory as seen by occ   (default: /var/www/nextcloud)
 #   -u USER    user that runs occ                  (default: www-data)
 #   -D DOMAIN  base domain                         (default: edalvix.cloud)
 #   -k         keep the apps as they are (skip the "files only" lockdown)
+#   -t         theme only: logos, colours, icons and look; no domain, HTTPS,
+#              language, apps or other settings (no <tenant> needed)
 #
 # Lockdown (default): only files, sharing between the company's users, previews
 # and security apps stay enabled; the app store is off and the apps folder is
@@ -29,22 +32,28 @@ NC_DIR="/var/www/nextcloud"
 RUN_AS="www-data"
 DOMAIN="edalvix.cloud"
 KEEP_APPS=0
+THEME_ONLY=0
 
-while getopts "d:u:D:k" opt; do
+while getopts "d:u:D:kt" opt; do
   case "$opt" in
     d) NC_DIR="$OPTARG" ;;
     u) RUN_AS="$OPTARG" ;;
     D) DOMAIN="$OPTARG" ;;
     k) KEEP_APPS=1 ;;
-    *) sed -n '5,25p' "$0"; exit 2 ;;
+    t) THEME_ONLY=1 ;;
+    *) sed -n '5,28p' "$0"; exit 2 ;;
   esac
 done
 shift $((OPTIND - 1))
 
-TENANT="$(echo "${1:?Usage: provision-tenant.sh [options] <tenant>}" | tr '[:upper:]' '[:lower:]')"
-if ! [[ "$TENANT" =~ ^[a-z0-9]([a-z0-9-]*[a-z0-9])?$ ]]; then
-  echo "error: '$TENANT' is not a valid subdomain (letters, digits and '-')" >&2
-  exit 1
+if [ "$THEME_ONLY" -eq 1 ]; then
+  TENANT="${1:-}"
+else
+  TENANT="$(echo "${1:?Usage: provision-tenant.sh [options] <tenant>  (or -t for the look only)}" | tr '[:upper:]' '[:lower:]')"
+  if ! [[ "$TENANT" =~ ^[a-z0-9]([a-z0-9-]*[a-z0-9])?$ ]]; then
+    echo "error: '$TENANT' is not a valid subdomain (letters, digits and '-')" >&2
+    exit 1
+  fi
 fi
 
 HOST="${TENANT}.${DOMAIN}"
@@ -80,6 +89,9 @@ else
   echo "note: with OCC set, run apply-theme.sh on the Nextcloud files first (theme expected at $ASSETS)"
 fi
 
+if [ "$THEME_ONLY" -eq 1 ]; then
+  echo "==> Applying the Edalvix Cloud look only (domain and settings unchanged)"
+else
 echo "==> Provisioning Edalvix Cloud for $URL"
 
 # Address
@@ -100,6 +112,8 @@ occ config:system:set templatedirectory --value=""
 # Edalvix file type icon instead of a blank page thumbnail
 printf '%s' '{"system":{"enabledPreviewProviders":["OC\\Preview\\PNG","OC\\Preview\\JPEG","OC\\Preview\\GIF","OC\\Preview\\BMP","OC\\Preview\\XBitmap","OC\\Preview\\WebP","OC\\Preview\\HEIC","OC\\Preview\\Krita","OC\\Preview\\MP3","OC\\Preview\\Movie"]}}' \
   | occ config:import
+
+fi  # end of settings skipped by -t
 
 # Theme defaults (themes/edalvix, installed by apply-theme.sh)
 occ config:system:set theme --value="edalvix"
@@ -124,7 +138,7 @@ occ config:system:set customclient_android --value="$CLIENT_URL"
 occ config:system:set customclient_ios --value="$CLIENT_URL"
 
 # Lockdown: files and previews only, nothing can be installed
-if [ "$KEEP_APPS" -eq 0 ]; then
+if [ "$KEEP_APPS" -eq 0 ] && [ "$THEME_ONLY" -eq 0 ]; then
   # Files, internal sharing, previews (viewer: images/video/audio, PDF, text),
   # trash/versions, security, and the core apps Nextcloud cannot run without.
   KEEP=(
@@ -177,6 +191,11 @@ if [ "$KEEP_APPS" -eq 0 ]; then
 fi
 
 occ maintenance:theme:update >/dev/null 2>&1 || true
+
+if [ "$THEME_ONLY" -eq 1 ]; then
+  echo "==> Done. Reload the page with Ctrl+F5."
+  exit 0
+fi
 
 echo "==> Done. Desktop clients for this customer:"
 echo "    build:   cmake -DEDALVIX_TENANT=${TENANT} ..."
