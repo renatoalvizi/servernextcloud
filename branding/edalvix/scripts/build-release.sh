@@ -29,7 +29,11 @@ else
   echo "Downloading Nextcloud $VERSION..."
   curl -fsSL -o "$WORK/nextcloud.tar.bz2" "$BASE_URL/nextcloud-${VERSION}.tar.bz2"
   curl -fsSL -o "$WORK/nextcloud.tar.bz2.sha256" "$BASE_URL/nextcloud-${VERSION}.tar.bz2.sha256"
-  expected="$(cut -d' ' -f1 < "$WORK/nextcloud.tar.bz2.sha256")"
+  # The .sha256 file may list several archives: take the line for the tarball
+  expected="$(grep -E "[[:space:]]\*?nextcloud-${VERSION}\.tar\.bz2\$" "$WORK/nextcloud.tar.bz2.sha256" | cut -d' ' -f1)"
+  if [ -z "$expected" ]; then
+    expected="$(head -n1 "$WORK/nextcloud.tar.bz2.sha256" | cut -d' ' -f1)"
+  fi
   actual="$(sha256sum "$WORK/nextcloud.tar.bz2" | cut -d' ' -f1)"
   if [ "$expected" != "$actual" ]; then
     echo "error: checksum mismatch for nextcloud-${VERSION}.tar.bz2" >&2

@@ -87,7 +87,7 @@ bash branding/edalvix/scripts/provision-tenant.sh -d /var/www/nextcloud algumaem
 Em Docker:
 
 ```bash
-OCC="docker exec -u www-data nextcloud php occ" bash branding/edalvix/scripts/provision-tenant.sh -d /var/www/html algumaempresa
+OCC="docker exec -i -u www-data nextcloud php occ" bash branding/edalvix/scripts/provision-tenant.sh -d /var/www/html algumaempresa
 ```
 
 Se o tema ainda não estiver em `themes/edalvix`, o script roda o

@@ -21,7 +21,7 @@ tar -cjf "$WORK/nextcloud.tar.bz2" -C "$WORK/src" nextcloud
 
 # apply-theme.sh
 bash "$SCRIPTS/apply-theme.sh" "$WORK/src/nextcloud" > /dev/null
-for f in defaults.php core/css/server.css core/css/guest.css core/img/logo/logo.svg core/img/favicon.svg assets/logo.svg assets/logoheader.svg assets/favicon.svg; do
+for f in defaults.php core/css/server.css core/css/guest.css core/img/logo/logo.svg core/img/favicon.svg assets/logo.svg assets/logoheader.svg assets/favicon.svg assets/favicon.png; do
   [ -f "$WORK/src/nextcloud/themes/edalvix/$f" ] || fail "theme file missing: $f"
 done
 if bash "$SCRIPTS/apply-theme.sh" "$WORK/nope" 2> /dev/null; then fail "apply-theme accepted a non-Nextcloud dir"; fi
@@ -61,6 +61,9 @@ fi
 cat > "$WORK/occ" <<'MOCK'
 #!/bin/bash
 echo "$*" >> "$OCC_LOG"
+if [ "$1" = "config:import" ]; then
+  cat >> "$(dirname "$OCC_LOG")/stdin.log"
+fi
 if [ "$1" = "app:list" ]; then
   printf 'Enabled:\n  - activity: 3.0.0\n  - dashboard: 7.0.0\n  - files: 2.0.0\n  - files_sharing: 1.20.0\n  - nextcloud_announcements: 2.0.0\n  - photos: 3.0.0\n  - viewer: 3.0.0\n  - files_pdfviewer: 3.0.0\n  - my_extra_app: 1.0.0\nDisabled:\n  - encryption: 2.0.0\n'
 fi
@@ -71,6 +74,8 @@ OCC="$WORK/occ" bash "$SCRIPTS/provision-tenant.sh" -d /var/www/html AlgumaEmpre
 grep -qx 'config:system:set trusted_domains 1 --value=algumaempresa.edalvix.cloud' "$OCC_LOG" || fail "trusted domain not set"
 grep -qx 'config:system:set overwrite.cli.url --value=https://algumaempresa.edalvix.cloud' "$OCC_LOG" || fail "overwrite.cli.url not set"
 grep -qx 'config:system:set theme --value=edalvix' "$OCC_LOG" || fail "theme not enabled"
+grep -qx 'config:system:set default_language --value=pt_BR' "$OCC_LOG" || fail "pt_BR not the default language"
+grep -qx 'config:system:set skeletondirectory --value=' "$OCC_LOG" || fail "Nextcloud sample files still given to new users"
 grep -qx 'theming:config name Edalvix Cloud' "$OCC_LOG" || fail "theming name not set"
 grep -qx 'theming:config logo /var/www/html/themes/edalvix/assets/logo.svg' "$OCC_LOG" || fail "logo path wrong"
 grep -qx 'app:disable nextcloud_announcements' "$OCC_LOG" || fail "announcements not disabled"
@@ -82,8 +87,9 @@ for app in files files_sharing viewer files_pdfviewer encryption; do
   if grep -qx "app:disable $app" "$OCC_LOG"; then fail "lockdown disabled $app"; fi
 done
 grep -qx 'config:system:set appstoreenabled --value=false --type=boolean' "$OCC_LOG" || fail "app store still enabled"
-grep -qx 'config:system:set apps_paths 0 writable --value=false --type=boolean' "$OCC_LOG" || fail "apps folder still writable"
-grep -qx 'config:system:set apps_paths 0 path --value=/var/www/html/apps' "$OCC_LOG" || fail "apps path wrong"
+grep -qx 'config:import' "$OCC_LOG" || fail "apps_paths not imported"
+grep -qF '{"system":{"apps_paths":[{"path":"/var/www/html/apps","url":"/apps","writable":false}]}}' "$WORK/stdin.log" || fail "apps_paths not read-only or path wrong"
+if grep -q 'config:system:set apps_paths' "$OCC_LOG"; then fail "apps_paths set key by key (breaks occ)"; fi
 grep -qx 'config:app:set files_sharing outgoing_server2server_share_enabled --value=no' "$OCC_LOG" || fail "federation still enabled"
 grep -qx 'config:system:set defaultapp --value=files' "$OCC_LOG" || fail "files is not the start page"
 

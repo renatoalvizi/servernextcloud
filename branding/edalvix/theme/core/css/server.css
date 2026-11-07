@@ -22,8 +22,8 @@ body {
 	--edalvix-btn-gradient: linear-gradient(135deg, #0a2f72 0%, #0753bd 50%, #0198f4 100%);
 	--edalvix-btn-gradient-hover: linear-gradient(135deg, #0d3a88 0%, #0a63d6 50%, #2aaaf7 100%);
 	--edalvix-btn-edge: #062355;
-	--edalvix-btn-shadow: 0 5px 0 var(--edalvix-btn-edge), 0 10px 24px rgba(0, 104, 206, .22);
-	--edalvix-btn-shadow-hover: 0 6px 0 var(--edalvix-btn-edge), 0 14px 28px rgba(0, 104, 206, .28);
+	--edalvix-btn-shadow: 0 4px 0 var(--edalvix-btn-edge), 0 6px 12px rgba(0, 104, 206, .18);
+	--edalvix-btn-shadow-hover: 0 5px 0 var(--edalvix-btn-edge), 0 8px 16px rgba(0, 104, 206, .24);
 	--edalvix-btn-shadow-active: 0 2px 0 var(--edalvix-btn-edge), 0 4px 10px rgba(0, 104, 206, .2);
 }
 

@@ -23,9 +23,8 @@ body {
 }
 
 /* Login card: white panel with the Cloud blue bar on top, as the product cards */
-.guest-box,
-.login-box,
-#body-login .wrapper > main > .guest-box {
+.guest-box:not(footer),
+.login-box {
 	background: #fff !important;
 	color: #071d33 !important;
 	border-radius: 4px !important;
@@ -86,9 +85,17 @@ body {
 	border-radius: 6px !important;
 }
 
-/* Footer: product first, company as a quiet signature */
+/* Footer: plain text on the navy background (it also has the .guest-box class) */
+footer.guest-box {
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+	backdrop-filter: none !important;
+}
+
 footer,
-footer .info {
-	color: #b7c7d8;
+footer .info,
+footer .info a {
+	color: #b7c7d8 !important;
 	font-size: 12px;
 }

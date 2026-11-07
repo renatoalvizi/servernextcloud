@@ -18,7 +18,8 @@
 #
 # Environment:
 #   OCC        full occ command, overrides -d/-u, e.g. for Docker:
-#              OCC="docker exec -u www-data nextcloud php occ" provision-tenant.sh -d /var/www/html algumaempresa
+#              OCC="docker exec -i -u www-data nextcloud php occ" provision-tenant.sh -d /var/www/html algumaempresa
+#              (-i is needed: some settings are sent to occ on stdin)
 #   EDALVIX_CLIENT_DOWNLOAD_URL  where users download the Edalvix Cloud clients
 #   EDALVIX_EXTRA_APPS           extra app ids to keep enabled (space separated)
 
@@ -86,6 +87,15 @@ occ config:system:set trusted_domains 1 --value="$HOST"
 occ config:system:set overwrite.cli.url --value="$URL"
 occ config:system:set overwriteprotocol --value="https"
 
+# Brazilian Portuguese by default (users can still pick another language)
+occ config:system:set default_language --value="pt_BR"
+occ config:system:set default_locale --value="pt_BR"
+occ config:system:set default_phone_region --value="BR"
+
+# New users start with an empty folder (no Nextcloud sample files or templates)
+occ config:system:set skeletondirectory --value=""
+occ config:system:set templatedirectory --value=""
+
 # Theme defaults (themes/edalvix, installed by apply-theme.sh)
 occ config:system:set theme --value="edalvix"
 
@@ -99,7 +109,8 @@ occ theming:config background_color "#071d33" 2>/dev/null || true
 occ theming:config background backgroundColor 2>/dev/null || true
 occ theming:config logo "$ASSETS/logo.svg"
 occ theming:config logoheader "$ASSETS/logoheader.svg"
-occ theming:config favicon "$ASSETS/favicon.svg"
+# Nextcloud accepts PNG/ICO favicons only (SVG is rejected)
+occ theming:config favicon "$ASSETS/favicon.png"
 occ theming:config disable-user-theming no 2>/dev/null || true
 
 # Client download links shown to users
@@ -141,9 +152,10 @@ if [ "$KEEP_APPS" -eq 0 ]; then
 
   # Nothing can be installed: no app store, read-only apps folder
   occ config:system:set appstoreenabled --value=false --type=boolean
-  occ config:system:set apps_paths 0 path --value="$NC_DIR/apps"
-  occ config:system:set apps_paths 0 url --value="/apps"
-  occ config:system:set apps_paths 0 writable --value=false --type=boolean
+  # apps_paths must be written in one go: an entry with only some of its keys
+  # is invalid and makes every later occ call fail ("apps directory not found")
+  printf '{"system":{"apps_paths":[{"path":"%s/apps","url":"/apps","writable":false}]}}' "$NC_DIR" \
+    | occ config:import
 
   # Updates are done by Edalvix, not from the web interface
   occ config:system:set upgrade.disable-web --value=true --type=boolean
