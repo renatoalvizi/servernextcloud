@@ -78,10 +78,9 @@ if [ -z "${OCC:-}" ]; then
     echo "error: '$NC_DIR' is not a Nextcloud directory (use -d)" >&2
     exit 1
   fi
-  if [ ! -f "$ASSETS/logo.svg" ]; then
-    echo "==> Edalvix theme not installed yet, installing it"
-    bash "$(dirname "${BASH_SOURCE[0]}")/apply-theme.sh" "$NC_DIR"
-  fi
+  # Always (re)install: an older copy of the theme would otherwise stay in place
+  echo "==> Installing the Edalvix theme from this checkout"
+  bash "$(dirname "${BASH_SOURCE[0]}")/apply-theme.sh" "$NC_DIR"
   if [ "$(id -un)" != "$RUN_AS" ]; then
     chown -R "$RUN_AS": "$NC_DIR/themes/edalvix" 2>/dev/null || true
   fi

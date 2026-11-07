@@ -54,6 +54,10 @@ export OCC_LOG="$WORK/occ.log"
 PATH="$WORK/bin:$PATH" bash "$SCRIPTS/provision-tenant.sh" -u "$(id -un)" -d "$WORK/fresh/nextcloud" empresa3 > /dev/null
 [ -f "$WORK/fresh/nextcloud/themes/edalvix/assets/logo.svg" ] || fail "provision did not install the missing theme"
 grep -qx "theming:config logo $WORK/fresh/nextcloud/themes/edalvix/assets/logo.svg" "$OCC_LOG" || fail "provision did not use the installed logo"
+# An older copy of the theme already installed is replaced (theme-only run)
+echo "/* old */" > "$WORK/fresh/nextcloud/themes/edalvix/core/css/server.css"
+PATH="$WORK/bin:$PATH" bash "$SCRIPTS/provision-tenant.sh" -t -u "$(id -un)" -d "$WORK/fresh/nextcloud" > /dev/null
+cmp -s "$WORK/fresh/nextcloud/themes/edalvix/core/css/server.css" "$ROOT/branding/edalvix/theme/core/css/server.css" || fail "-t kept an outdated theme"
 if PATH="$WORK/bin:$PATH" bash "$SCRIPTS/provision-tenant.sh" -u "$(id -un)" -d "$WORK/nope" empresa3 2> /dev/null; then
   fail "provision accepted a non-Nextcloud dir"
 fi
