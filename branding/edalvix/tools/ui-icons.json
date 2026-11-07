@@ -229,12 +229,6 @@
    "svg": "<svg data-v-4625d649=\"\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path data-v-4625d649=\"\" d=\"M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z\"></path></svg>"
   },
   {
-   "key": "M17,1H7A5,5 0 0,0 2,6 5,5 0 0,0 7,11",
-   "file": "vue-icon-files-settings",
-   "label": "icon files settings",
-   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 12\">\n\t<path d=\"M17,1H7A5,5 0 0,0 2,6 5,5 0 0,0 7,11H17A5,5 0 0,0 22,6 5,5 0 0,0 17,1Z\"></path>\n\t<circle cy=\"6\" r=\"3\" fill=\"var(--color-main-background)\"></circle>\n</svg>"
-  },
-  {
    "key": "M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V2",
    "file": "vue-icon-files-settings-2",
    "label": "icon files settings",

@@ -45,7 +45,9 @@ APPS = [
 
 # Never restyled: spinners, and icons drawn on top of a primary (gradient) button
 SKIP_NAMES = {"loading-icon"}
-EXCLUDE = ".button-vue--vue-primary, .button-vue--primary, button.primary, .checkbox-radio-switch--checked .checkbox-radio-switch__icon"
+# Form controls (checkboxes, radios, switches) keep Nextcloud's drawing: they
+# already use the Edalvix blue and their shape carries their state.
+EXCLUDE = ".button-vue--vue-primary, .button-vue--primary, button.primary, .checkbox-radio-switch"
 
 
 def defs(x, y, w, h):
@@ -171,9 +173,11 @@ def build_vue(data) -> int:
         if name in SKIP_NAMES or not d:
             continue
         (UI_DIR / f"{name}.svg").write_text(glyph(f'<path d="{d}"/>'))
-        sel = f".material-design-icon.{name}:not(:is({EXCLUDE}) *)"
+        # Drawn on the <svg> itself: it always has the icon's exact size,
+        # while its wrapper can be larger (menus, buttons)
+        sel = f".material-design-icon.{name}:not(:is({EXCLUDE}) *) > svg"
         css.append(f"{sel} {{ background: url('../img/edalvix/ui/{name}.svg') center / contain no-repeat; filter: var(--ex-icon-filter); }}")
-        css.append(f"{sel} > svg {{ opacity: 0; }}")
+        css.append(f"{sel} > * {{ opacity: 0; }}")
         n += 1
     for item in data["vue"]:
         key, file = item["key"], item["file"]
@@ -187,10 +191,9 @@ def build_vue(data) -> int:
             url = f"../img/edalvix/ui/{file}.svg"
         sel = f'.icon-vue:has(path[d^="{key}"]):not(:is({EXCLUDE}) *)'
         css.append(f"/* {item.get('label', file)} */")
-        # .icon-vue fills the whole button area; its inner span has the icon's
-        # real size. Some icons have no inner span: then the icon itself.
-        css.append(f"{sel} > span, {sel}:has(> svg) {{ background: url('{url}') center / contain no-repeat; filter: var(--ex-icon-filter); }}")
-        css.append(f"{sel} svg {{ opacity: 0; }}")
+        # Drawn on the <svg> itself, which has the icon's exact size
+        css.append(f"{sel} svg {{ background: url('{url}') center / contain no-repeat; filter: var(--ex-icon-filter); }}")
+        css.append(f"{sel} svg > * {{ opacity: 0; }}")
         n += 1
     CSS.write_text("\n".join(css) + "\n")
     return n

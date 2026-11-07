@@ -582,3 +582,99 @@ body[data-theme-dark-highcontrast] {
 	border-radius: 12px !important;
 	border: 1px solid var(--ex-card-border);
 }
+
+/* ===================================================================
+ * 6. Circles as the site's diagram ("SUA OPERAÇÃO"): light orb with a
+ *    blue glow and a colour icon; dark orb with inner light on dark themes
+ * =================================================================== */
+body {
+	--ex-orb-bg: linear-gradient(145deg, #ffffff, #dcefff);
+	--ex-orb-border: #b9dcff;
+	--ex-orb-shadow: inset 0 1px 0 #fff, 0 0 12px rgba(44, 140, 219, .22), 0 6px 14px rgba(8, 100, 199, .18);
+	--ex-avatar-ring: #ffffff;
+	--ex-hero: radial-gradient(circle at 84% 45%, #0f51a0 0%, #092b66 25%, #071d44 51%, #061430 82%);
+}
+
+body[data-theme-dark],
+body[data-theme-dark-highcontrast] {
+	--ex-orb-bg: linear-gradient(140deg, #193c63, #102846);
+	--ex-orb-border: #5384b0;
+	--ex-orb-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 0 14px rgba(44, 140, 219, .3), 0 8px 18px rgba(1, 10, 28, .6);
+	--ex-avatar-ring: #193c63;
+	--ex-hero: linear-gradient(112deg, #06132c 0%, #0b2852 62%, #123e70 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+	body[data-theme-default] {
+		--ex-orb-bg: linear-gradient(140deg, #193c63, #102846);
+		--ex-orb-border: #5384b0;
+		--ex-orb-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 0 14px rgba(44, 140, 219, .3), 0 8px 18px rgba(1, 10, 28, .6);
+		--ex-avatar-ring: #193c63;
+		--ex-hero: linear-gradient(112deg, #06132c 0%, #0b2852 62%, #123e70 100%);
+	}
+}
+
+/* Sharing list: "others with access", "internal link", "public link" */
+.avatar-shared,
+.avatar-external,
+.avatar-link-share,
+.sharing-entry__avatar.avatardiv--unknown {
+	background-color: transparent !important;
+	background-repeat: no-repeat !important;
+	background-position: center, center !important;
+	background-size: 18px 18px, cover !important;
+	border: 1px solid var(--ex-orb-border) !important;
+	border-radius: 50% !important;
+	box-shadow: var(--ex-orb-shadow) !important;
+}
+
+.avatar-shared {
+	background-image: url('../img/edalvix/ui/dots-horizontal-icon.svg'), var(--ex-orb-bg) !important;
+}
+
+.avatar-external {
+	background-image: url('../img/edalvix/ui/open-in-new-icon.svg'), var(--ex-orb-bg) !important;
+}
+
+.avatar-link-share {
+	background-image: url('../img/edalvix/ui/link-icon.svg'), var(--ex-orb-bg) !important;
+}
+
+/* People's avatars: white ring and a soft blue glow (not the tiny inline ones) */
+.avatardiv:not(.user-bubble__avatar):not(.avatar-class-icon) {
+	box-shadow: 0 0 0 2px var(--ex-avatar-ring), 0 0 12px rgba(44, 140, 219, .28) !important;
+}
+
+/* Profile card: banner as the site's hero, avatar as the central orb */
+.preview-card {
+	border-radius: 17px !important;
+	overflow: hidden;
+	border: 1px solid var(--ex-card-border) !important;
+	box-shadow: var(--ex-card-shadow) !important;
+}
+
+.preview-card__banner {
+	background:
+		url('../img/edalvix/network-lines.svg') center / cover no-repeat,
+		radial-gradient(circle at 88% 30%, rgba(0, 207, 255, .22), transparent 45%),
+		var(--ex-hero) !important;
+}
+
+.preview-card__avatar {
+	border: 0 !important;
+	background: var(--ex-orb-bg) !important;
+	padding: 5px !important;
+	box-sizing: border-box;
+	box-shadow: inset 0 1px 0 #fff, 0 0 28px rgba(44, 140, 219, .45), 0 17px 35px rgba(1, 10, 28, .35) !important;
+}
+
+.preview-card__avatar img {
+	border-radius: 50% !important;
+}
+
+.preview-card__name {
+	color: #fff !important;
+	font-weight: 750 !important;
+	letter-spacing: -0.02em;
+	text-shadow: 0 1px 2px rgba(0, 21, 60, .45);
+}
