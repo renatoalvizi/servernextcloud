@@ -26,12 +26,40 @@ branding/edalvix/
 ├── assets/                 logos e favicon
 ├── theme/                  copiado para <nextcloud>/themes/edalvix
 │   ├── defaults.php        nome, cores, links e rodapé padrão
+│   ├── core/img/filetypes/ ícones de pastas e tipos de arquivo no estilo do site
+│   ├── core/css/           estilo do site edalvix.com.br (server.css: páginas internas; guest.css: login)
 │   └── core/img/           logo e favicon do tema
+├── tools/make-ui-icons.py   ícones da interface (menus, barra, ações) no estilo do site
+├── tools/make-icons.py      gera os ícones (python3 branding/edalvix/tools/make-icons.py)
 └── scripts/
     ├── apply-theme.sh      instala o tema numa instalação/release
     ├── build-release.sh    gera edalvix-cloud-<versão>.tar.bz2/.zip
     └── provision-tenant.sh configura a instância de um cliente
 ```
+
+## Somente arquivos (padrão)
+
+O `provision-tenant.sh` deixa ativos só os apps de arquivos:
+- arquivos, compartilhamento entre os usuários da empresa, lixeira e versões;
+- pré-visualização: imagens, vídeo e áudio (`viewer`), PDF (`files_pdfviewer`)
+  e texto (`text`);
+- segurança: política de senha, proteção contra força bruta, 2FA, login suspeito e auditoria.
+
+Todos os outros (Atividade, Painel, Fotos, Contatos, Status, etc.) são
+desativados. Para impedir que alguém instale algo:
+- a loja de apps fica desligada (`appstoreenabled = false`);
+- a pasta `apps/` passa a ser somente leitura (`apps_paths`);
+- a atualização pela interface web fica desligada (a EDALVIX atualiza);
+- o compartilhamento com outros servidores (federação) fica desligado, o que
+  isola cada empresa.
+
+**Admin da empresa:** dê a ele o papel de **administrador de grupo**
+(Usuários > usuário > "Administrador de grupo"), e não de administrador geral.
+Um administrador geral ainda consegue reativar, na página de Apps, os apps que
+vêm no pacote. O administrador de grupo nem vê essa página.
+
+Para manter algum app a mais: `EDALVIX_EXTRA_APPS="calendar contacts"`.
+Para não aplicar a restrição: `-k`.
 
 ## Uso
 
@@ -62,7 +90,7 @@ bash branding/edalvix/scripts/provision-tenant.sh -d /var/www/nextcloud algumaem
 Em Docker:
 
 ```bash
-OCC="docker exec -u www-data nextcloud php occ" bash branding/edalvix/scripts/provision-tenant.sh -d /var/www/html algumaempresa
+OCC="docker exec -i -u www-data nextcloud php occ" bash branding/edalvix/scripts/provision-tenant.sh -d /var/www/html algumaempresa
 ```
 
 Se o tema ainda não estiver em `themes/edalvix`, o script roda o

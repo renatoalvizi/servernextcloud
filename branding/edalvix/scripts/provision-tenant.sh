@@ -9,12 +9,19 @@
 #   -d DIR     Nextcloud directory as seen by occ   (default: /var/www/nextcloud)
 #   -u USER    user that runs occ                  (default: www-data)
 #   -D DOMAIN  base domain                         (default: edalvix.cloud)
-#   -k         keep Nextcloud news/survey apps enabled
+#   -k         keep the apps as they are (skip the "files only" lockdown)
+#
+# Lockdown (default): only files, sharing between the company's users, previews
+# and security apps stay enabled; the app store is off and the apps folder is
+# read-only, so no administrator can install anything. Federation (sharing with
+# other servers, including other Edalvix customers) is turned off.
 #
 # Environment:
 #   OCC        full occ command, overrides -d/-u, e.g. for Docker:
-#              OCC="docker exec -u www-data nextcloud php occ" provision-tenant.sh -d /var/www/html algumaempresa
+#              OCC="docker exec -i -u www-data nextcloud php occ" provision-tenant.sh -d /var/www/html algumaempresa
+#              (-i is needed: some settings are sent to occ on stdin)
 #   EDALVIX_CLIENT_DOWNLOAD_URL  where users download the Edalvix Cloud clients
+#   EDALVIX_EXTRA_APPS           extra app ids to keep enabled (space separated)
 
 set -euo pipefail
 
@@ -29,7 +36,7 @@ while getopts "d:u:D:k" opt; do
     u) RUN_AS="$OPTARG" ;;
     D) DOMAIN="$OPTARG" ;;
     k) KEEP_APPS=1 ;;
-    *) sed -n '5,19p' "$0"; exit 2 ;;
+    *) sed -n '5,25p' "$0"; exit 2 ;;
   esac
 done
 shift $((OPTIND - 1))
@@ -80,6 +87,20 @@ occ config:system:set trusted_domains 1 --value="$HOST"
 occ config:system:set overwrite.cli.url --value="$URL"
 occ config:system:set overwriteprotocol --value="https"
 
+# Brazilian Portuguese by default (users can still pick another language)
+occ config:system:set default_language --value="pt_BR"
+occ config:system:set default_locale --value="pt_BR"
+occ config:system:set default_phone_region --value="BR"
+
+# New users start with an empty folder (no Nextcloud sample files or templates)
+occ config:system:set skeletondirectory --value=""
+occ config:system:set templatedirectory --value=""
+
+# Thumbnails only for pictures, audio covers and video; text files show the
+# Edalvix file type icon instead of a blank page thumbnail
+printf '%s' '{"system":{"enabledPreviewProviders":["OC\\Preview\\PNG","OC\\Preview\\JPEG","OC\\Preview\\GIF","OC\\Preview\\BMP","OC\\Preview\\XBitmap","OC\\Preview\\WebP","OC\\Preview\\HEIC","OC\\Preview\\Krita","OC\\Preview\\MP3","OC\\Preview\\Movie"]}}' \
+  | occ config:import
+
 # Theme defaults (themes/edalvix, installed by apply-theme.sh)
 occ config:system:set theme --value="edalvix"
 
@@ -93,7 +114,8 @@ occ theming:config background_color "#071d33" 2>/dev/null || true
 occ theming:config background backgroundColor 2>/dev/null || true
 occ theming:config logo "$ASSETS/logo.svg"
 occ theming:config logoheader "$ASSETS/logoheader.svg"
-occ theming:config favicon "$ASSETS/favicon.svg"
+# Nextcloud accepts PNG/ICO favicons only (SVG is rejected)
+occ theming:config favicon "$ASSETS/favicon.png"
 occ theming:config disable-user-theming no 2>/dev/null || true
 
 # Client download links shown to users
@@ -101,10 +123,56 @@ occ config:system:set customclient_desktop --value="$CLIENT_URL"
 occ config:system:set customclient_android --value="$CLIENT_URL"
 occ config:system:set customclient_ios --value="$CLIENT_URL"
 
-# Nextcloud-branded news and telemetry are not part of the Edalvix product
+# Lockdown: files and previews only, nothing can be installed
 if [ "$KEEP_APPS" -eq 0 ]; then
-  for app in nextcloud_announcements survey_client; do
-    occ app:disable "$app" >/dev/null 2>&1 || true
+  # Files, internal sharing, previews (viewer: images/video/audio, PDF, text),
+  # trash/versions, security, and the core apps Nextcloud cannot run without.
+  KEEP=(
+    files files_sharing files_trashbin files_versions files_lock
+    viewer files_pdfviewer text
+    theming notifications
+    password_policy bruteforcesettings twofactor_totp twofactor_backupcodes suspicious_login admin_audit
+    serverinfo logreader
+    dav settings provisioning_api oauth2 cloud_federation_api federatedfilesharing
+    lookup_server_connector workflowengine
+  )
+  read -r -a EXTRA <<< "${EDALVIX_EXTRA_APPS:-}"
+  KEEP+=("${EXTRA[@]}")
+
+  echo "==> Lockdown: keeping only file apps"
+  # "app:list" prints "Enabled:" then "  - appid: version" lines, then "Disabled:"
+  mapfile -t ENABLED < <(occ app:list | sed -n '/^Enabled:/,/^Disabled:/s/^  - \([a-z0-9_]*\):.*/\1/p')
+  for app in "${ENABLED[@]}"; do
+    keep=0
+    for k in "${KEEP[@]}"; do
+      [ "$app" = "$k" ] && keep=1 && break
+    done
+    if [ "$keep" -eq 0 ]; then
+      # Apps that Nextcloud marks as "always enabled" refuse; that is fine
+      if occ app:disable "$app" >/dev/null 2>&1; then
+        echo "    disabled $app"
+      fi
+    fi
+  done
+
+  # Nothing can be installed: no app store, read-only apps folder
+  occ config:system:set appstoreenabled --value=false --type=boolean
+  # apps_paths must be written in one go: an entry with only some of its keys
+  # is invalid and makes every later occ call fail ("apps directory not found")
+  printf '{"system":{"apps_paths":[{"path":"%s/apps","url":"/apps","writable":false}]}}' "$NC_DIR" \
+    | occ config:import
+
+  # Updates are done by Edalvix, not from the web interface
+  occ config:system:set upgrade.disable-web --value=true --type=boolean
+  # Files is the start page; no Nextcloud help links
+  occ config:system:set defaultapp --value=files
+  occ config:system:set knowledgebaseenabled --value=false --type=boolean
+
+  # No sharing with other servers: each company stays isolated
+  for key in outgoing_server2server_share_enabled incoming_server2server_share_enabled \
+             outgoing_server2server_group_share_enabled incoming_server2server_group_share_enabled \
+             lookupServerEnabled lookupServerUploadEnabled; do
+    occ config:app:set files_sharing "$key" --value=no
   done
 fi
 

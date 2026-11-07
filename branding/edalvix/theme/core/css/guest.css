@@ -1,0 +1,234 @@
+/*
+ * Edalvix Cloud: login and other guest pages as the hero of edalvix.com.br
+ *
+ * Guest pages carry no theme attribute on <body>, so, like the site, they
+ * follow the system: light by default, dark under prefers-color-scheme.
+ *
+ * SPDX-FileCopyrightText: 2026 EDALVIX
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+#body-login {
+	/* Light tokens (site styles.css) */
+	--ex-blue: #0877ff;
+	--ex-cyan: #3edcff;
+	--ex-eyebrow: #52759e;
+	--ex-title: #081d3b;
+	--ex-text: #526178;
+	--ex-link: #0b285b;
+	--ex-card-border: #d5e4f6;
+	--ex-card-bg: linear-gradient(155deg, #fff, #fff 67%, #f4f9ff);
+	--ex-card-shadow: 0 24px 50px rgba(0, 17, 47, .5), inset 0 1px 0 #fff;
+	--ex-hero: radial-gradient(circle at 84% 45%, #0f51a0 0%, #092b66 25%, #071d44 51%, #061430 82%);
+	--ex-btn-grad: linear-gradient(135deg, #0b2a63, #0762d7 65%, #01aaff);
+	--ex-btn-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), 0 3px 0 #052355, 0 10px 22px rgba(7, 98, 215, .25);
+	--ex-btn-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, .67), 0 5px 0 #052355, 0 14px 28px rgba(7, 98, 215, .32);
+	--ex-btn-shadow-active: inset 0 1px 3px rgba(0, 28, 85, .67), 0 1px 0 #052355;
+
+	/* Inputs inside the white card */
+	--color-main-background: #ffffff !important;
+	--color-main-text: #102443 !important;
+	--color-text-maxcontrast: #5e6b80 !important;
+	--color-border-maxcontrast: #8597ad !important;
+	--color-primary-element: #0762d7 !important;
+	--color-primary-element-text: #ffffff !important;
+
+	--font-face: Arial, Helvetica, sans-serif !important;
+	--border-radius-element: 10px !important;
+	--border-radius-large: 12px !important;
+	font-family: var(--font-face);
+	-webkit-font-smoothing: antialiased;
+
+	/* Site hero: deep blue, network lines and a cyan glow */
+	background:
+		url('../img/edalvix/network-lines.svg') center / cover no-repeat,
+		radial-gradient(circle at 92% 28%, rgba(0, 207, 255, .2), transparent 38%),
+		var(--ex-hero) !important;
+	background-attachment: fixed !important;
+}
+
+@media (prefers-color-scheme: dark) {
+	#body-login {
+		/* Dark tokens (site dark.css) */
+		--ex-blue: #6bb4ff;
+		--ex-cyan: #6ccfff;
+		--ex-eyebrow: #85add2;
+		--ex-title: #f1f7ff;
+		--ex-text: #c2d0e0;
+		--ex-link: #8dc9ff;
+		--ex-card-border: #2b4868;
+		--ex-card-bg: linear-gradient(150deg, #132e4c, #10243f 72%, #0c2039);
+		--ex-card-shadow: 0 22px 45px rgba(1, 9, 22, .55), inset 0 1px 0 rgba(255, 255, 255, .08);
+		--ex-hero: linear-gradient(112deg, #06132c 0%, #0b2852 62%, #123e70 100%);
+
+		--color-main-background: #10243f !important;
+		--color-main-text: #eef5ff !important;
+		--color-text-maxcontrast: #aec1d8 !important;
+		--color-border-maxcontrast: #6f8cad !important;
+		--color-primary-element: #4aa8ff !important;
+		--color-primary-element-text: #061430 !important;
+	}
+}
+
+/* The guest header (logo) must not blur the hero behind it */
+#header.header-guest {
+	background: transparent !important;
+	-webkit-backdrop-filter: none !important;
+	backdrop-filter: none !important;
+	box-shadow: none !important;
+}
+
+/* Login card = the site's product card */
+.guest-box:not(footer),
+.login-box {
+	position: relative;
+	background: var(--ex-card-bg) !important;
+	color: var(--ex-title) !important;
+	border: 1px solid var(--ex-card-border) !important;
+	border-radius: 17px !important;
+	box-shadow: var(--ex-card-shadow) !important;
+	padding: 34px 32px 26px !important;
+	-webkit-backdrop-filter: none !important;
+	backdrop-filter: none !important;
+}
+
+/* Product accent bar on top of the card: drawn as the card's top border so
+ * it follows the rounded corners (a separate 4px bar with 17px corners got
+ * its radius scaled down and stuck out of the curves) */
+.guest-box:not(footer),
+.login-box {
+	border-top: 4px solid var(--ex-blue) !important;
+}
+
+/* Title with the site's eyebrow label above it */
+.guest-box h2,
+.login-box h2 {
+	text-align: left !important;
+	font-size: 26px !important;
+	line-height: 1.12;
+	font-weight: 750 !important;
+	letter-spacing: -0.035em;
+	color: var(--ex-title) !important;
+	margin-bottom: 22px !important;
+}
+
+.login-box h2::before {
+	content: "ÁREA DO CLIENTE";
+	display: block;
+	margin-bottom: 14px;
+	padding-left: 30px;
+	font-size: 10px;
+	font-weight: 800;
+	letter-spacing: .19em;
+	line-height: 16px;
+	white-space: nowrap;
+	color: var(--ex-eyebrow);
+	background: linear-gradient(var(--ex-cyan), var(--ex-cyan)) left center / 22px 2px no-repeat;
+}
+
+/* Primary button = .glossy-button */
+.guest-box .button-vue--vue-primary,
+.guest-box .button-vue--primary,
+.guest-box button.primary,
+.guest-box input[type="submit"],
+.login-box .button-vue--vue-primary,
+.login-box .button-vue--primary {
+	min-height: 52px !important;
+	background: var(--ex-btn-grad) !important;
+	border: 0 !important;
+	border-radius: 10px !important;
+	color: #fff !important;
+	font-weight: 800 !important;
+	font-size: 14px !important;
+	text-shadow: 0 1px 0 rgba(0, 21, 60, .35);
+	box-shadow: var(--ex-btn-shadow) !important;
+	transition: transform .2s ease, box-shadow .2s ease, filter .2s ease !important;
+}
+
+.guest-box .button-vue--vue-primary:hover:not(:disabled),
+.guest-box .button-vue--primary:hover:not(:disabled),
+.guest-box button.primary:hover:not(:disabled),
+.guest-box input[type="submit"]:hover {
+	transform: translateY(-2px);
+	filter: saturate(1.08) brightness(1.04);
+	box-shadow: var(--ex-btn-shadow-hover) !important;
+}
+
+.guest-box .button-vue--vue-primary:active:not(:disabled),
+.guest-box .button-vue--primary:active:not(:disabled),
+.guest-box button.primary:active:not(:disabled),
+.guest-box input[type="submit"]:active {
+	transform: translateY(1px);
+	filter: none;
+	box-shadow: var(--ex-btn-shadow-active) !important;
+}
+
+.guest-box :focus-visible {
+	outline: 3px solid var(--ex-cyan) !important;
+	outline-offset: 3px;
+}
+
+/* "Log in with a device" / "Forgot password?": the site's card links */
+.guest-box .button-vue--vue-tertiary,
+.guest-box .button-vue--tertiary,
+.guest-box .login-form__link,
+.guest-box a:not(.button-vue) {
+	color: var(--ex-link) !important;
+	font-weight: 700 !important;
+	font-size: 13px !important;
+}
+
+.guest-box .button-vue--vue-tertiary:hover,
+.guest-box .button-vue--tertiary:hover,
+.guest-box a:not(.button-vue):hover {
+	color: var(--ex-blue) !important;
+	background: transparent !important;
+}
+
+/* Footer: plain text on the hero (it also has the .guest-box class) */
+footer.guest-box {
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+	-webkit-backdrop-filter: none !important;
+	backdrop-filter: none !important;
+}
+
+footer,
+footer .info,
+footer .info a {
+	color: #c0d2eb !important;
+	font-size: 12px;
+}
+
+footer.guest-box .info a,
+footer .info a:link,
+footer .info a:visited {
+	font-weight: 800 !important;
+	color: #eff8ff !important;
+}
+
+/* Logo inside the card, large: the header logo (outside the card) is hidden
+ * and the card draws the logo at its top. Navy wordmark on the white card,
+ * light wordmark on the dark card. */
+#body-login {
+	--ex-card-logo: url('../../assets/logo-dark.svg');
+}
+
+@media (prefers-color-scheme: dark) {
+	#body-login {
+		--ex-card-logo: url('../../assets/logo.svg');
+	}
+}
+
+#header.header-guest {
+	display: none !important;
+}
+
+.guest-box:not(footer),
+.login-box {
+	background:
+		var(--ex-card-logo) center 40px / min(330px, calc(100% - 64px)) auto no-repeat,
+		var(--ex-card-bg) !important;
+	padding-top: 158px !important;
+}
