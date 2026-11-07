@@ -1,0 +1,74 @@
+/*
+ * Edalvix Cloud: login and other guest pages, styled like edalvix.com.br
+ * Loaded after Nextcloud's own core/css/guest.css (theme override).
+ *
+ * SPDX-FileCopyrightText: 2026 EDALVIX
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+body {
+	--font-face: Arial, Helvetica, sans-serif !important;
+	--border-radius: 2px !important;
+	--border-radius-element: 2px !important;
+	--border-radius-large: 4px !important;
+	--border-radius-pill: 2px !important;
+	font-family: var(--font-face);
+}
+
+/* Login card: white panel with the Cloud blue bar on top, as the product cards */
+.guest-box,
+.login-box,
+#body-login .wrapper > main > .guest-box {
+	background: #fff !important;
+	color: #071d33 !important;
+	border-radius: 4px !important;
+	border-top: 3px solid #0068ce !important;
+	box-shadow: 0 8px 24px rgba(7, 29, 51, .18) !important;
+}
+
+.guest-box h2,
+.login-box h2 {
+	font-weight: 500;
+	letter-spacing: -0.02em;
+	color: #071d33;
+}
+
+/* Login and other primary buttons: navy, white text, lift on hover */
+.guest-box .button-vue--vue-primary,
+.guest-box .button-vue--primary,
+.guest-box button.primary,
+.guest-box input[type="submit"],
+.login-box .button-vue--vue-primary,
+.login-box .button-vue--primary,
+.login-box input[type="submit"] {
+	background-color: #071d33 !important;
+	border: 1px solid #071d33 !important;
+	color: #fff !important;
+	font-weight: 600;
+	border-radius: 2px !important;
+	transition: background-color .2s, transform .2s;
+}
+
+.guest-box .button-vue--vue-primary:hover:not(:disabled),
+.guest-box .button-vue--primary:hover:not(:disabled),
+.guest-box button.primary:hover:not(:disabled),
+.guest-box input[type="submit"]:hover,
+.login-box .button-vue--vue-primary:hover:not(:disabled),
+.login-box .button-vue--primary:hover:not(:disabled),
+.login-box input[type="submit"]:hover {
+	background-color: #294868 !important;
+	border-color: #294868 !important;
+	transform: translateY(-1px);
+}
+
+.guest-box input,
+.login-box input {
+	border-radius: 2px !important;
+}
+
+/* Footer: product first, company as a quiet signature */
+footer,
+footer .info {
+	color: #b7c7d8;
+	font-size: 12px;
+}

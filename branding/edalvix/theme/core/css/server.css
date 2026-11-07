@@ -1,0 +1,117 @@
+/*
+ * Edalvix Cloud: Nextcloud styled like edalvix.com.br
+ * Loaded after Nextcloud's own core/css/server.css (theme override).
+ * Colors that the Theming app controls (primary #0068ce, background #071d33)
+ * are set by provision-tenant.sh; this file adjusts shapes, type and buttons.
+ *
+ * SPDX-FileCopyrightText: 2026 EDALVIX
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+/* Brand tokens (same as the site) */
+:root,
+body {
+	--edalvix-navy: #071d33;
+	--edalvix-navy-hover: #294868;
+	--edalvix-cloud: #0068ce;
+	--edalvix-ink: #263b51;
+	--edalvix-muted: #626e7b;
+	--edalvix-line: #dce1e6;
+	--edalvix-pale: #f2f4f6;
+	/* Button color: navy on light themes, Cloud blue on dark themes */
+	--edalvix-button: var(--edalvix-navy);
+	--edalvix-button-hover: var(--edalvix-navy-hover);
+}
+
+body[data-theme-dark],
+body[data-theme-dark-highcontrast] {
+	--edalvix-button: var(--edalvix-cloud);
+	--edalvix-button-hover: #2a86e0;
+}
+
+@media (prefers-color-scheme: dark) {
+	body[data-theme-default] {
+		--edalvix-button: var(--edalvix-cloud);
+		--edalvix-button-hover: #2a86e0;
+	}
+}
+
+/* Typography and square corners, as on the site */
+body {
+	--font-face: Arial, Helvetica, sans-serif !important;
+	--border-radius: 2px !important;
+	--border-radius-small: 2px !important;
+	--border-radius-element: 2px !important;
+	--border-radius-large: 4px !important;
+	--border-radius-container: 4px !important;
+	--border-radius-container-large: 6px !important;
+	--border-radius-pill: 2px !important;
+	font-family: var(--font-face);
+}
+
+h1, h2, h3,
+.app-content h2,
+.settings-section__name {
+	font-weight: 500;
+	letter-spacing: -0.02em;
+}
+
+/* Primary buttons: solid navy, white text, slight lift on hover */
+.button-vue--vue-primary,
+.button-vue--primary,
+button.primary,
+input[type="submit"].primary,
+input[type="button"].primary,
+.button.primary {
+	background-color: var(--edalvix-button) !important;
+	border: 1px solid var(--edalvix-button) !important;
+	color: #fff !important;
+	font-weight: 600;
+	border-radius: 2px !important;
+	transition: background-color .2s, transform .2s;
+}
+
+.button-vue--vue-primary:hover:not(:disabled),
+.button-vue--primary:hover:not(:disabled),
+button.primary:hover:not(:disabled),
+input[type="submit"].primary:hover:not(:disabled),
+.button.primary:hover {
+	background-color: var(--edalvix-button-hover) !important;
+	border-color: var(--edalvix-button-hover) !important;
+	transform: translateY(-1px);
+}
+
+/* Secondary buttons: outlined, like the site's light buttons */
+.button-vue--vue-secondary,
+.button-vue--secondary {
+	border: 1px solid var(--edalvix-line) !important;
+	border-radius: 2px !important;
+	font-weight: 600;
+}
+
+/* Inputs: thin border, square corners */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="search"],
+input[type="url"],
+input[type="tel"],
+input[type="number"],
+textarea,
+select {
+	border-radius: 2px !important;
+}
+
+/* Cards and popovers: white panel, thin line, Cloud accent on top */
+.modal-container,
+.app-settings-modal .modal-container {
+	border-radius: 4px !important;
+	border-top: 3px solid var(--edalvix-cloud);
+	box-shadow: 0 8px 24px rgba(7, 29, 51, .08);
+}
+
+/* Navigation: selected item uses the Cloud blue accent bar, like the site's cards */
+.app-navigation-entry.active,
+.app-navigation-entry--active {
+	box-shadow: inset 3px 0 0 var(--edalvix-cloud);
+}

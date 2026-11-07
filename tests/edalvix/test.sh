@@ -21,7 +21,7 @@ tar -cjf "$WORK/nextcloud.tar.bz2" -C "$WORK/src" nextcloud
 
 # apply-theme.sh
 bash "$SCRIPTS/apply-theme.sh" "$WORK/src/nextcloud" > /dev/null
-for f in defaults.php core/img/logo/logo.svg core/img/favicon.svg assets/logo.svg assets/logoheader.svg assets/favicon.svg; do
+for f in defaults.php core/css/server.css core/css/guest.css core/img/logo/logo.svg core/img/favicon.svg assets/logo.svg assets/logoheader.svg assets/favicon.svg; do
   [ -f "$WORK/src/nextcloud/themes/edalvix/$f" ] || fail "theme file missing: $f"
 done
 if bash "$SCRIPTS/apply-theme.sh" "$WORK/nope" 2> /dev/null; then fail "apply-theme accepted a non-Nextcloud dir"; fi
@@ -61,6 +61,9 @@ fi
 cat > "$WORK/occ" <<'MOCK'
 #!/bin/bash
 echo "$*" >> "$OCC_LOG"
+if [ "$1" = "app:list" ]; then
+  printf 'Enabled:\n  - activity: 3.0.0\n  - dashboard: 7.0.0\n  - files: 2.0.0\n  - files_sharing: 1.20.0\n  - nextcloud_announcements: 2.0.0\n  - photos: 3.0.0\n  - viewer: 3.0.0\n  - files_pdfviewer: 3.0.0\n  - my_extra_app: 1.0.0\nDisabled:\n  - encryption: 2.0.0\n'
+fi
 MOCK
 chmod +x "$WORK/occ"
 export OCC_LOG="$WORK/occ.log"
@@ -71,11 +74,28 @@ grep -qx 'config:system:set theme --value=edalvix' "$OCC_LOG" || fail "theme not
 grep -qx 'theming:config name Edalvix Cloud' "$OCC_LOG" || fail "theming name not set"
 grep -qx 'theming:config logo /var/www/html/themes/edalvix/assets/logo.svg' "$OCC_LOG" || fail "logo path wrong"
 grep -qx 'app:disable nextcloud_announcements' "$OCC_LOG" || fail "announcements not disabled"
+# Lockdown: everything but the file apps is disabled, nothing can be installed
+for app in activity dashboard photos my_extra_app; do
+  grep -qx "app:disable $app" "$OCC_LOG" || fail "lockdown did not disable $app"
+done
+for app in files files_sharing viewer files_pdfviewer encryption; do
+  if grep -qx "app:disable $app" "$OCC_LOG"; then fail "lockdown disabled $app"; fi
+done
+grep -qx 'config:system:set appstoreenabled --value=false --type=boolean' "$OCC_LOG" || fail "app store still enabled"
+grep -qx 'config:system:set apps_paths 0 writable --value=false --type=boolean' "$OCC_LOG" || fail "apps folder still writable"
+grep -qx 'config:system:set apps_paths 0 path --value=/var/www/html/apps' "$OCC_LOG" || fail "apps path wrong"
+grep -qx 'config:app:set files_sharing outgoing_server2server_share_enabled --value=no' "$OCC_LOG" || fail "federation still enabled"
+grep -qx 'config:system:set defaultapp --value=files' "$OCC_LOG" || fail "files is not the start page"
+
+: > "$OCC_LOG"
+EDALVIX_EXTRA_APPS="my_extra_app photos" OCC="$WORK/occ" bash "$SCRIPTS/provision-tenant.sh" -d /var/www/html empresa4 > /dev/null
+if grep -qE '^app:disable (my_extra_app|photos)$' "$OCC_LOG"; then fail "EDALVIX_EXTRA_APPS not kept"; fi
 
 : > "$OCC_LOG"
 OCC="$WORK/occ" bash "$SCRIPTS/provision-tenant.sh" -D example.org -k empresa2 > /dev/null
 grep -qx 'config:system:set trusted_domains 1 --value=empresa2.example.org' "$OCC_LOG" || fail "custom domain ignored"
 if grep -q 'app:disable' "$OCC_LOG"; then fail "-k did not keep apps"; fi
+if grep -q 'appstoreenabled' "$OCC_LOG"; then fail "-k still locked the instance down"; fi
 
 if OCC="$WORK/occ" bash "$SCRIPTS/provision-tenant.sh" 'bad_name' 2> /dev/null; then fail "invalid tenant accepted"; fi
 
