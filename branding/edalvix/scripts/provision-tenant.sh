@@ -96,6 +96,11 @@ occ config:system:set default_phone_region --value="BR"
 occ config:system:set skeletondirectory --value=""
 occ config:system:set templatedirectory --value=""
 
+# Thumbnails only for pictures, audio covers and video; text files show the
+# Edalvix file type icon instead of a blank page thumbnail
+printf '%s' '{"system":{"enabledPreviewProviders":["OC\\Preview\\PNG","OC\\Preview\\JPEG","OC\\Preview\\GIF","OC\\Preview\\BMP","OC\\Preview\\XBitmap","OC\\Preview\\WebP","OC\\Preview\\HEIC","OC\\Preview\\Krita","OC\\Preview\\MP3","OC\\Preview\\Movie"]}}' \
+  | occ config:import
+
 # Theme defaults (themes/edalvix, installed by apply-theme.sh)
 occ config:system:set theme --value="edalvix"
 

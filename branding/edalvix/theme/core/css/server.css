@@ -315,25 +315,245 @@ input[type="button"].primary:active:not(:disabled),
 	background: var(--ex-card-bg) !important;
 }
 
+/* -------------------------------------------------------------------
+ * Sidebar: clean, roomy list with a big action button on top and the
+ * storage card at the bottom (Yandex Disk layout, Edalvix colours)
+ * ------------------------------------------------------------------- */
+body {
+	--ex-nav-bg: #f7faff;
+	--ex-nav-icon: #29405e;
+	--ex-quota-bg: linear-gradient(155deg, #eaf3ff, #dfeeff);
+	--ex-quota-border: #cfe2fb;
+	--ex-quota-track: #ffffff;
+}
+
+body[data-theme-dark],
+body[data-theme-dark-highcontrast] {
+	--ex-nav-bg: #0c1d36;
+	--ex-nav-icon: #b9cde4;
+	--ex-quota-bg: linear-gradient(150deg, #132e4c, #10243f);
+	--ex-quota-border: #2b4868;
+	--ex-quota-track: #0a1c35;
+}
+
+@media (prefers-color-scheme: dark) {
+	body[data-theme-default] {
+		--ex-nav-bg: #0c1d36;
+		--ex-nav-icon: #b9cde4;
+		--ex-quota-bg: linear-gradient(150deg, #132e4c, #10243f);
+		--ex-quota-border: #2b4868;
+		--ex-quota-track: #0a1c35;
+	}
+}
+
 .app-navigation {
-	background: var(--ex-pale) !important;
-	border-right: 1px solid var(--ex-line);
+	background: var(--ex-nav-bg) !important;
+	border-right: 0 !important;
+}
+
+.app-navigation__content {
+	padding: 12px 12px 10px !important;
+}
+
+/* The header search already searches files: drop the duplicate filter box */
+.app-navigation__search {
+	display: none !important;
+}
+
+/* Items: bigger, rounded, no Nextcloud accent bar */
+.app-navigation-entry-wrapper {
+	margin-bottom: 4px !important;
+}
+
+.app-navigation-entry {
+	min-height: 46px !important;
+	border-radius: 14px !important;
+	box-shadow: none !important;
+	background: transparent !important;
+}
+
+.app-navigation-entry .app-navigation-entry-link {
+	min-height: 46px !important;
+	padding-left: 6px !important;
 }
 
 .app-navigation-entry .app-navigation-entry__name {
-	font-weight: 700;
-	color: var(--ex-nav-text);
+	font-size: 15px !important;
+	font-weight: 600 !important;
+	color: var(--ex-ink) !important;
+}
+
+.app-navigation-entry .app-navigation-entry-icon {
+	color: var(--ex-nav-icon) !important;
+}
+
+.app-navigation-entry .app-navigation-entry-icon .material-design-icon svg {
+	width: 22px !important;
+	height: 22px !important;
+}
+
+.app-navigation-entry:hover {
+	background: var(--color-background-hover) !important;
 }
 
 .app-navigation-entry.active,
 .app-navigation-entry--active {
 	background: var(--color-primary-element-light) !important;
-	box-shadow: inset 4px 0 0 var(--ex-blue);
+	box-shadow: none !important;
+}
+
+.app-navigation-entry.active::before,
+.app-navigation-entry--active::before {
+	display: none !important;
 }
 
 .app-navigation-entry.active .app-navigation-entry__name,
 .app-navigation-entry--active .app-navigation-entry__name {
 	color: var(--color-primary-element-light-text) !important;
+	font-weight: 700 !important;
+}
+
+.app-navigation-entry.active .app-navigation-entry-icon,
+.app-navigation-entry--active .app-navigation-entry-icon {
+	color: var(--ex-blue) !important;
+}
+
+/* Storage card at the bottom */
+.app-navigation-entry__settings-quota {
+	height: auto !important;
+	min-height: 0 !important;
+	margin: 6px 0 8px !important;
+	padding: 14px 14px 16px !important;
+	border-radius: 18px !important;
+	background: var(--ex-quota-bg) !important;
+	border: 1px solid var(--ex-quota-border);
+}
+
+.app-navigation-entry__settings-quota .app-navigation-entry {
+	display: flex !important;
+	flex-direction: column;
+	align-items: stretch;
+	height: auto !important;
+	min-height: 0 !important;
+	background: transparent !important;
+}
+
+.app-navigation-entry__settings-quota .app-navigation-entry-link {
+	order: 2;
+	flex: none !important;
+	overflow: visible !important;
+	justify-content: center;
+	height: auto !important;
+	min-height: 0 !important;
+	padding: 0 !important;
+}
+
+.app-navigation-entry__settings-quota .app-navigation-entry-icon {
+	display: none !important;
+}
+
+.app-navigation-entry__settings-quota .app-navigation-entry__name {
+	overflow: visible !important;
+	height: auto !important;
+	line-height: 20px !important;
+	white-space: normal !important;
+	text-align: center;
+	font-size: 14px !important;
+	font-weight: 600 !important;
+	color: var(--color-main-text) !important;
+	margin-top: 10px;
+	padding: 0 !important;
+}
+
+.app-navigation-entry__settings-quota .progress-bar {
+	order: 1;
+	position: static !important;
+	display: block;
+	width: 100% !important;
+	height: 8px !important;
+	margin: 0 0 2px !important;
+	border: 0;
+	border-radius: 99px !important;
+	background: var(--ex-quota-track) !important;
+	-webkit-appearance: none;
+	appearance: none;
+	overflow: hidden;
+}
+
+.app-navigation-entry__settings-quota .progress-bar::-webkit-progress-bar {
+	background: var(--ex-quota-track);
+	border-radius: 99px;
+}
+
+.app-navigation-entry__settings-quota .progress-bar::-webkit-progress-value {
+	background: var(--ex-btn-grad);
+	border-radius: 99px;
+}
+
+.app-navigation-entry__settings-quota .progress-bar::-moz-progress-bar {
+	background: var(--ex-btn-grad);
+	border-radius: 99px;
+}
+
+/* Big "Novo" (upload / create) button at the top of the sidebar.
+ * It stays in its place in the page; on wide screens with the sidebar open
+ * it is only drawn over the sidebar. */
+@media (min-width: 1024px) {
+	#content-vue:has(.app-navigation:not(.app-navigation--close)) .app-navigation__content {
+		padding-top: 78px !important;
+	}
+
+	/* The content area is its own stacking layer below the sidebar (1000 vs
+	 * 1800); lift it so the button can be drawn over the sidebar */
+	#content-vue:has(.app-navigation:not(.app-navigation--close)) #app-content-vue {
+		z-index: 1900 !important;
+	}
+
+	#content-vue:has(.app-navigation:not(.app-navigation--close)) .files-list__header-upload-button {
+		/* #content-vue (will-change) is the containing block, so these
+		 * coordinates are relative to the content frame, not the window */
+		position: fixed;
+		z-index: 30;
+		top: 14px;
+		left: 12px;
+		width: 276px;
+	}
+
+	#content-vue:has(.app-navigation:not(.app-navigation--close)) .files-list__header-upload-button .action-item,
+	#content-vue:has(.app-navigation:not(.app-navigation--close)) .files-list__header-upload-button .v-popper,
+	#content-vue:has(.app-navigation:not(.app-navigation--close)) .files-list__header-upload-button .button-vue {
+		width: 100% !important;
+	}
+
+	#content-vue:has(.app-navigation:not(.app-navigation--close)) .files-list__header-upload-button .button-vue {
+		min-height: 52px !important;
+		border-radius: 14px !important;
+		font-size: 15px !important;
+	}
+}
+
+/* -------------------------------------------------------------------
+ * Icons in the site style
+ * ------------------------------------------------------------------- */
+/* Folders (drawn by the Files app, not through the file type icons) */
+.files-list__row-icon .folder-icon,
+.files-list__row-icon .folder-open-icon {
+	background: url('../img/edalvix/folder.svg') center / contain no-repeat;
+}
+
+.files-list__row-icon .folder-icon svg,
+.files-list__row-icon .folder-open-icon svg {
+	visibility: hidden;
+}
+
+/* Share action: only the "add person" icon (not yet shared). Matched by
+ * its drawing, since Nextcloud gives it no class of its own. */
+.files-list__row-action-sharing-status .files-list__row-action-icon:has(path[d^="M15,4A4,4"]) {
+	background: url('../img/edalvix/share.svg') center / 24px 24px no-repeat;
+}
+
+.files-list__row-action-sharing-status .files-list__row-action-icon:has(path[d^="M15,4A4,4"]) svg {
+	visibility: hidden;
 }
 
 /* File list header = the site's "eyebrow" labels */

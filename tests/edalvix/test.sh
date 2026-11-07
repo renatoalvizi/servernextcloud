@@ -77,6 +77,8 @@ grep -qx 'config:system:set overwrite.cli.url --value=https://algumaempresa.edal
 grep -qx 'config:system:set theme --value=edalvix' "$OCC_LOG" || fail "theme not enabled"
 grep -qx 'config:system:set default_language --value=pt_BR' "$OCC_LOG" || fail "pt_BR not the default language"
 grep -qx 'config:system:set skeletondirectory --value=' "$OCC_LOG" || fail "Nextcloud sample files still given to new users"
+grep -qF '"enabledPreviewProviders":["OC\\Preview\\PNG"' "$WORK/stdin.log" || fail "preview providers not limited"
+if grep -q 'MarkDown\|TXT' "$WORK/stdin.log"; then fail "text thumbnails still enabled"; fi
 grep -qx 'theming:config name Edalvix Cloud' "$OCC_LOG" || fail "theming name not set"
 grep -qx 'theming:config logo /var/www/html/themes/edalvix/assets/logo.svg' "$OCC_LOG" || fail "logo path wrong"
 grep -qx 'app:disable nextcloud_announcements' "$OCC_LOG" || fail "announcements not disabled"

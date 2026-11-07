@@ -26,8 +26,10 @@ branding/edalvix/
 ├── assets/                 logos e favicon
 ├── theme/                  copiado para <nextcloud>/themes/edalvix
 │   ├── defaults.php        nome, cores, links e rodapé padrão
+│   ├── core/img/filetypes/ ícones de pastas e tipos de arquivo no estilo do site
 │   ├── core/css/           estilo do site edalvix.com.br (server.css: páginas internas; guest.css: login)
 │   └── core/img/           logo e favicon do tema
+├── tools/make-icons.py      gera os ícones (python3 branding/edalvix/tools/make-icons.py)
 └── scripts/
     ├── apply-theme.sh      instala o tema numa instalação/release
     ├── build-release.sh    gera edalvix-cloud-<versão>.tar.bz2/.zip
